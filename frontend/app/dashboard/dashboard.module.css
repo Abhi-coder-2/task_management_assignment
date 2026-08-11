@@ -1,0 +1,25 @@
+.board {
+  height: calc(100vh - 58px);
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+.board::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+
+.board::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.board::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 999px;
+}
+
+@media (max-width: 767px) {
+  .board {
+    height: calc(100vh - 56px);
+  }
+}
