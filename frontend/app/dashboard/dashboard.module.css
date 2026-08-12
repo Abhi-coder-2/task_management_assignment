@@ -1,25 +1,26 @@
-.board {
-  height: calc(100vh - 58px);
-  scrollbar-width: thin;
-  scrollbar-color: var(--border) transparent;
-}
 
-.board::-webkit-scrollbar {
-  height: 6px;
-  width: 6px;
+:root{
+    --color_light:#ffffff;
+    --color_dark:#000000;
+    --card_bg:#fcf8f8;
+    --light_border:#f3f1f1;
+    --hover_bg:#f0eeee;
 }
-
-.board::-webkit-scrollbar-track {
-  background: transparent;
+.sidebar{
+    width: 250px;
+    border: 1px solid var(--light_border);
+    padding: 20px;
+    background-color: var(--card_bg);
 }
-
-.board::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border-radius: 999px;
+.pointer{
+    cursor: pointer;
 }
+.workspace_text{
+    display: inline-block;
+    font-size: 16px;
+    margin-right: 10px;
+}
+.task_project_link:hover{
+    background-color: var(--hover_bg);
 
-@media (max-width: 767px) {
-  .board {
-    height: calc(100vh - 56px);
-  }
 }
