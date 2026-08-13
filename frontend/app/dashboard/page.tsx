@@ -7,6 +7,7 @@ import {
   PanelRight,
   PanelLeft,
   X,
+  Columns3,
   Search,
   Plus,
   MoreHorizontal,
