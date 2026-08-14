@@ -7,6 +7,7 @@ import {
   Funnel,
   MoreHorizontal,
   Search,
+  Tag,
 } from "lucide-react";
 import DashboardLayout from "../page";
 
@@ -107,7 +108,7 @@ export default function TaskBoard() {
         <div
           className={`${styles.task_header} bg-white fixed pr-70 w-full top-15 mb-5 z-20 flex items-center justify-between px-5`}
         >
-          <div>Tasks</div>
+          <div className="text-1xs font-bold">Tasks</div>
 
           <div className={`${styles.task_head_right} flex`}>
             <div className="flex gap-2">
@@ -158,20 +159,18 @@ export default function TaskBoard() {
             return (
               <div
                 key={column.id}
-                className="w-[300px] shrink-0 rounded-lg bg-gray-100 p-3"
+                className="w-[275px] shrink-0 rounded-lg bg-gray-100 p-3"
               >
 
                 {/* COLUMN HEADER */}
                 <div className="mb-3 flex items-center justify-between">
 
                   <div className="flex items-center gap-2">
-                    <h2 className="font-semibold text-gray-800">
+                    <h2 className=" text-xs font-bold text-gray-800">
                       {column.title}
                     </h2>
 
-                    <span className="text-sm text-gray-500">
-                      {columnTasks.length}
-                    </span>
+                    
                   </div>
 
                   <div className="flex items-center gap-2">
@@ -197,7 +196,7 @@ export default function TaskBoard() {
 
                     <div
                       key={task.id}
-                      className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm"
+                      className={`${styles.task_card_outer} rounded-lg border border-gray-200 bg-white p-3 shadow-sm`}
                     >
 
                       {/* TITLE */}
@@ -214,24 +213,28 @@ export default function TaskBoard() {
                       </div>
                       {/* USER */}
                       <div className="mt-4 flex items-center gap-2">
-                       <div className="flex justify-between gap-28">
-                        <div className="text-sm text-gray-700">
-                          {task.user}
+                       <div className={styles.user_calendar}>
+                        <div className="text-sm text-gray-700 flex item-center gap-2">
+                          <span ><img className={styles.user_card_img} src="/admin.jpg" alt="" /></span>
+                         <span> {task.user}</span>
                         </div>
-                        <div className="inline-flex items-center gap-1 rounded-full bg-red-50 px-2 py-1 text-xs text-red-500">
+                        <div className={`${styles.card_dueDate} inline-flex items-center gap-1 rounded-full bg-red-50 px-2 py-1 text-xs text-red-500`}>
                           <CalendarDays size={13} />
                           {task.dueDate}
                         </div>
                        </div>
                       </div>
                       {/* CATEGORY */}
-                      <div className="mt-3">
-                        <span className="inline-flex rounded-full bg-gray-100 px-2 py-1 text-xs text-gray-600">
-                          {task.category}
-                        </span>
-                        <span className="inline-flex rounded-full bg-gray-100 px-2 py-1 text-xs text-gray-600 ml-3">
-                          {task.category}
-                        </span>
+                      <div className=" flex mt-2 gap-2 ">
+                        <div className=" rounded-full bg-gray-100 px-2 py-1 text-xs text-gray-600 flex align-center gap-1">
+                         <span><Tag size={14}/></span>
+                         <span>{task.category}</span>
+                        </div>
+                       <div className=" rounded-full bg-gray-100 px-2 py-1 text-xs text-gray-600 flex align-center gap-1">
+                         <span><Tag size={14}/></span>
+                         <span>{task.category}</span>
+                        </div>
+                       
                       </div>
                     </div>
 
