@@ -10,6 +10,8 @@ import {
   Tag,
 } from "lucide-react";
 import DashboardLayout from "../page";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 type Task = {
   id: number;
@@ -100,6 +102,25 @@ const tasks: Task[] = [
 ];
 
 export default function TaskBoard() {
+const [cardData,setCardData] = useState([]);
+useEffect(()=>{
+  fetchData();
+},[])
+const fetchData = async ()=>{
+  try{
+    const res = await axios.get("http://localhost:3001/tasks");
+    setCardData(res.data);
+   
+    
+  }
+  catch(err){
+    console.log("Error fetching tasks:",err);
+    
+  }
+  
+}
+ console.log(cardData,"@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+
   return (
     <DashboardLayout>
       <div className="overflow-x-auto pb-5">

@@ -10,11 +10,11 @@ import {
 export class CreateTaskDto {
   @IsString()
   @IsNotEmpty()
-  title: string;
+  title: string | undefined;
 
   @IsString()
   @IsNotEmpty()
-  description: string;
+  description: string | undefined;
 
   @IsEnum([
     'Development',
@@ -23,10 +23,10 @@ export class CreateTaskDto {
     'Testing',
     'Documentation',
   ])
-  category: string;
+  category: string | undefined;
 
   @IsEnum(['Low', 'Medium', 'High'])
-  priority: string;
+  priority: string | undefined;
 
   @IsOptional()
   @IsEnum(['todo', 'doing', 'completed', 'onhold'])
