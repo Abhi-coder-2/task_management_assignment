@@ -76,3 +76,18 @@
     width: 25px;
     border-radius: 50%;
 }
+
+
+
+/* acvbnm */
+
+.modal_outer{
+    height:300px;
+    width: 300px;
+    border: 2px solid black;
+    background-color: red;
+    position: absolute;
+    z-index: 100;
+    top: 120px;
+    right: 100px;
+}

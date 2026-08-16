@@ -13,11 +13,14 @@ import DashboardLayout from "../page";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+
 type Task = {
-  id: number;
+  _id: string;
   title: string;
-  user: string;
-  initials: string;
+  assignedTo?: {
+    name?: string;
+    username?: string;
+  } | null;
   category: string;
   priority: "High" | "Medium" | "Low";
   dueDate: string;
@@ -48,61 +51,10 @@ const columns: Column[] = [
   },
 ];
 
-const tasks: Task[] = [
-  {
-    id: 1,
-    title: "Write API Documentation",
-    user: "Alex",
-    initials: "A",
-    category: "Development",
-    priority: "High",
-    dueDate: "29 Aug",
-    status: "onhold",
-  },
-  {
-    id: 2,
-    title: "Implement Search Function",
-    user: "Alex",
-    initials: "A",
-    category: "Development",
-    priority: "High",
-    dueDate: "29 Aug",
-    status: "doing",
-  },
-  {
-    id: 3,
-    title: "Deploy to Production",
-    user: "Alex",
-    initials: "A",
-    category: "Deployment",
-    priority: "High",
-    dueDate: "29 Aug",
-    status: "todo",
-  },
-    {
-    id: 7,
-    title: "Deploy to Production",
-    user: "Alex",
-    initials: "A",
-    category: "Deployment",
-    priority: "High",
-    dueDate: "29 Aug",
-    status: "todo",
-  },
-  {
-    id: 4,
-    title: "Feature Testing Passed",
-    user: "QA Team",
-    initials: "Q",
-    category: "Testing",
-    priority: "Low",
-    dueDate: "29 Aug",
-    status: "completed",
-  },
-];
-
 export default function TaskBoard() {
 const [cardData,setCardData] = useState([]);
+const[loading,setLoading] = useState(true);
+const [showAddTask, setShowAddTask] = useState(false);
 useEffect(()=>{
   fetchData();
 },[])
@@ -117,8 +69,11 @@ const fetchData = async ()=>{
     console.log("Error fetching tasks:",err);
     
   }
-  
-}
+  finally {
+      setLoading(false);
+    }
+
+};
  console.log(cardData,"@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 
   return (
@@ -158,7 +113,7 @@ const fetchData = async ()=>{
             </div>
 
             <div>
-              <button
+              <button onClick={() => setShowAddTask(true)}
                 className={`${styles.task_head_btn} bg-black text-white`}
               >
                 <span>+</span> Add Task
@@ -173,7 +128,7 @@ const fetchData = async ()=>{
           {columns.map((column) => {
 
             // Get tasks belonging to this column
-            const columnTasks = tasks.filter(
+            const columnTasks = cardData.filter(
               (task) => task.status === column.id
             );
 
@@ -210,13 +165,15 @@ const fetchData = async ()=>{
 
                 </div>
 
+
+
                 {/* CARDS */}
                 <div className="flex flex-col gap-3">
 
                   {columnTasks.map((task) => (
 
                     <div
-                      key={task.id}
+                      key={task._id}
                       className={`${styles.task_card_outer} rounded-lg border border-gray-200 bg-white p-3 shadow-sm`}
                     >
 
@@ -237,11 +194,19 @@ const fetchData = async ()=>{
                        <div className={styles.user_calendar}>
                         <div className="text-sm text-gray-700 flex item-center gap-2">
                           <span ><img className={styles.user_card_img} src="/admin.jpg" alt="" /></span>
-                         <span> {task.user}</span>
+                         <span className="text-xs mt-1">Admin</span>
                         </div>
                         <div className={`${styles.card_dueDate} inline-flex items-center gap-1 rounded-full bg-red-50 px-2 py-1 text-xs text-red-500`}>
                           <CalendarDays size={13} />
-                          {task.dueDate}
+                         {task.dueDate
+                                ? new Date(task.dueDate).toLocaleDateString(
+                                    "en-GB",
+                                    {
+                                      day: "2-digit",
+                                      month: "short",
+                                    }
+                                  )
+                                : "No date"}
                         </div>
                        </div>
                       </div>
@@ -277,6 +242,18 @@ const fetchData = async ()=>{
 
         </div>
       </div>
+        {showAddTask && (
+      <div className={styles.modal_outer}>
+        <div className={styles.modal_box}>
+          <h2>Add Task</h2>
+
+          <button onClick={() => setShowAddTask(false)}>
+            Close
+          </button>
+        </div>
+      </div>
+    )}
     </DashboardLayout>
   );
 }
+
