@@ -3,6 +3,11 @@
 import styles from "./tasks.module.css";
 import {
   CalendarDays,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  ChevronUp,
+  Circle,
   Columns3,
   Funnel,
   MoreHorizontal,
@@ -12,7 +17,6 @@ import {
 import DashboardLayout from "../page";
 import { useEffect, useState } from "react";
 import axios from "axios";
-
 
 type Task = {
   _id: string;
@@ -52,34 +56,29 @@ const columns: Column[] = [
 ];
 
 export default function TaskBoard() {
-const [cardData,setCardData] = useState([]);
-const[loading,setLoading] = useState(true);
-const [showAddTask, setShowAddTask] = useState(false);
-useEffect(()=>{
-  fetchData();
-},[])
-const fetchData = async ()=>{
-  try{
-    const res = await axios.get("http://localhost:3001/tasks");
-    setCardData(res.data);
-   
-    
-  }
-  catch(err){
-    console.log("Error fetching tasks:",err);
-    
-  }
-  finally {
+  const [cardData, setCardData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [showAddTask, setShowAddTask] = useState(false);
+  const [workSpaceOpen, setWorkSpaceOpen] = useState(true);
+  const[statusModal,setStatusModal] = useState(false)
+  useEffect(() => {
+    fetchData();
+  }, []);
+  const fetchData = async () => {
+    try {
+      const res = await axios.get("http://localhost:3001/tasks");
+      setCardData(res.data);
+    } catch (err) {
+      console.log("Error fetching tasks:", err);
+    } finally {
       setLoading(false);
     }
-
-};
- console.log(cardData,"@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+  };
+  console.log(cardData, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 
   return (
     <DashboardLayout>
       <div className="overflow-x-auto pb-5">
-
         {/* TASKS HEADER */}
         <div
           className={`${styles.task_header} bg-white fixed pr-70 w-full top-15 mb-5 z-20 flex items-center justify-between px-5`}
@@ -88,10 +87,7 @@ const fetchData = async ()=>{
 
           <div className={`${styles.task_head_right} flex`}>
             <div className="flex gap-2">
-              <input
-                className={styles.task_head_input}
-                type="text"
-              />
+              <input className={styles.task_head_input} type="text" />
 
               <div className={styles.search_div}>
                 <Search className={styles.task_head_icon} />
@@ -103,9 +99,7 @@ const fetchData = async ()=>{
             >
               <Columns3 className={styles.task_head_icon} />
 
-              <div className="text-xs font-bold">
-                Fields
-              </div>
+              <div className="text-xs font-bold">Fields</div>
             </div>
 
             <div className={styles.task_icon_border}>
@@ -113,7 +107,8 @@ const fetchData = async ()=>{
             </div>
 
             <div>
-              <button onClick={() => setShowAddTask(true)}
+              <button
+                onClick={() => setShowAddTask(true)}
                 className={`${styles.task_head_btn} bg-black text-white`}
               >
                 <span>+</span> Add Task
@@ -124,12 +119,10 @@ const fetchData = async ()=>{
 
         {/*----------------------CARDS-------------------------- */}
         <div className="flex min-w-max gap-4 mt-20">
-
           {columns.map((column) => {
-
             // Get tasks belonging to this column
             const columnTasks = cardData.filter(
-              (task) => task.status === column.id
+              (task) => task.status === column.id,
             );
 
             return (
@@ -137,49 +130,32 @@ const fetchData = async ()=>{
                 key={column.id}
                 className="w-[275px] shrink-0 rounded-lg bg-gray-100 p-3"
               >
-
                 {/* COLUMN HEADER */}
                 <div className="mb-3 flex items-center justify-between">
-
                   <div className="flex items-center gap-2">
                     <h2 className=" text-xs font-bold text-gray-800">
                       {column.title}
                     </h2>
-
-                    
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      className="text-xl text-gray-600"
-                    >
+                    <button type="button" className="text-xl text-gray-600">
                       +
                     </button>
 
-                    <MoreHorizontal
-                      size={18}
-                      className="text-gray-600"
-                    />
+                    <MoreHorizontal size={18} className="text-gray-600" />
                   </div>
-
                 </div>
-
-
 
                 {/* CARDS */}
                 <div className="flex flex-col gap-3">
-
                   {columnTasks.map((task) => (
-
                     <div
                       key={task._id}
                       className={`${styles.task_card_outer} rounded-lg border border-gray-200 bg-white p-3 shadow-sm`}
                     >
-
                       {/* TITLE */}
                       <div className="flex items-start justify-between gap-2">
-
                         <h3 className="text-sm font-medium text-gray-800">
                           {task.title}
                         </h3>
@@ -191,41 +167,50 @@ const fetchData = async ()=>{
                       </div>
                       {/* USER */}
                       <div className="mt-4 flex items-center gap-2">
-                       <div className={styles.user_calendar}>
-                        <div className="text-sm text-gray-700 flex item-center gap-2">
-                          <span ><img className={styles.user_card_img} src="/admin.jpg" alt="" /></span>
-                         <span className="text-xs mt-1">Admin</span>
+                        <div className={styles.user_calendar}>
+                          <div className="text-sm text-gray-700 flex item-center gap-2">
+                            <span>
+                              <img
+                                className={styles.user_card_img}
+                                src="/admin.jpg"
+                                alt=""
+                              />
+                            </span>
+                            <span className="text-xs mt-1">Admin</span>
+                          </div>
+                          <div
+                            className={`${styles.card_dueDate} inline-flex items-center gap-1 rounded-full bg-red-50 px-2 py-1 text-xs text-red-500`}
+                          >
+                            <CalendarDays size={13} />
+                            {task.dueDate
+                              ? new Date(task.dueDate).toLocaleDateString(
+                                  "en-GB",
+                                  {
+                                    day: "2-digit",
+                                    month: "short",
+                                  },
+                                )
+                              : "No date"}
+                          </div>
                         </div>
-                        <div className={`${styles.card_dueDate} inline-flex items-center gap-1 rounded-full bg-red-50 px-2 py-1 text-xs text-red-500`}>
-                          <CalendarDays size={13} />
-                         {task.dueDate
-                                ? new Date(task.dueDate).toLocaleDateString(
-                                    "en-GB",
-                                    {
-                                      day: "2-digit",
-                                      month: "short",
-                                    }
-                                  )
-                                : "No date"}
-                        </div>
-                       </div>
                       </div>
                       {/* CATEGORY */}
                       <div className=" flex mt-2 gap-2 ">
                         <div className=" rounded-full bg-gray-100 px-2 py-1 text-xs text-gray-600 flex align-center gap-1">
-                         <span><Tag size={14}/></span>
-                         <span>{task.category}</span>
+                          <span>
+                            <Tag size={14} />
+                          </span>
+                          <span>{task.category}</span>
                         </div>
-                       <div className=" rounded-full bg-gray-100 px-2 py-1 text-xs text-gray-600 flex align-center gap-1">
-                         <span><Tag size={14}/></span>
-                         <span>{task.category}</span>
+                        <div className=" rounded-full bg-gray-100 px-2 py-1 text-xs text-gray-600 flex align-center gap-1">
+                          <span>
+                            <Tag size={14} />
+                          </span>
+                          <span>{task.category}</span>
                         </div>
-                       
                       </div>
                     </div>
-
                   ))}
-
                 </div>
 
                 {/* ADD TASK */}
@@ -235,25 +220,45 @@ const fetchData = async ()=>{
                 >
                   + Add Task
                 </button>
-
               </div>
             );
           })}
-
         </div>
       </div>
-        {showAddTask && (
-      <div className={styles.modal_outer}>
-        <div className={styles.modal_box}>
-          <h2>Add Task</h2>
-
-          <button onClick={() => setShowAddTask(false)}>
-            Close
-          </button>
+      {showAddTask && (
+        <div className={styles.modal_outer}>
+          <div className={styles.modal_box}>
+            <input type="text" placeholder="task title" />
+            {/* status */}
+            <div
+            
+              onClick={() => {setWorkSpaceOpen(!workSpaceOpen);setStatusModal(true)}}
+              className={`${styles.status} flex`}
+            >
+              <div className="flex gap-2">
+                <div className={styles.icon_align}>
+                  <Circle size={14}  />
+                </div>
+                <div className={styles.add_task_text}> Status</div>
+              </div>
+              <div>
+                {" "}
+                <ChevronRight
+                  size={14}
+                  className={` transition-transform duration-200 ${
+                    workSpaceOpen ? "rotate-90" : ""
+                  }`}
+                />
+              </div>
+            </div>
+             {/* status end */}
+          </div>
         </div>
-      </div>
-    )}
+      )}
+      {/* status modal  */}
+      {statusModal && (
+        <div className={styles.status_modal}>dfghjkl</div>
+      )}
     </DashboardLayout>
   );
 }
-
