@@ -3,6 +3,7 @@
 import styles from "./tasks.module.css";
 import {
   CalendarDays,
+  Check,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
@@ -12,7 +13,11 @@ import {
   Funnel,
   MoreHorizontal,
   Search,
+  Signal,
   Tag,
+  UserRound,
+  Users,
+  UsersRound,
 } from "lucide-react";
 import DashboardLayout from "../page";
 import { useEffect, useState } from "react";
@@ -54,13 +59,49 @@ const columns: Column[] = [
     title: "On Hold",
   },
 ];
+type Modal = {
+  icon: string;
+  text: string;
+};
+const modal: Modal[] = [
+  {
+    icon: <Circle />,
+    text: "Status",
+  },
+  {
+    icon: <Signal />,
+    text: "Priority",
+  },
+  {
+    icon: <UsersRound />,
+    text: "Members",
+  },
+  {
+    icon: <CalendarDays />,
+    text: "Due Date",
+  },
+  {
+    icon: <Users />,
+    text: "Teams",
+  },
+  {
+    icon: <Tag />,
+    text: "Labels",
+  },
+  {
+    icon: <UserRound />,
+    text: "Reporter",
+  },
+];
 
 export default function TaskBoard() {
   const [cardData, setCardData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAddTask, setShowAddTask] = useState(false);
   const [workSpaceOpen, setWorkSpaceOpen] = useState(true);
-  const[statusModal,setStatusModal] = useState(false)
+ const [openModal, setOpenModal] = useState<number | null>(null);
+const [selectedStatus, setSelectedStatus] = useState("todo");
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -108,7 +149,7 @@ export default function TaskBoard() {
 
             <div>
               <button
-                onClick={() => setShowAddTask(true)}
+                onClick={() => setShowAddTask(!showAddTask)}
                 className={`${styles.task_head_btn} bg-black text-white`}
               >
                 <span>+</span> Add Task
@@ -228,36 +269,336 @@ export default function TaskBoard() {
       {showAddTask && (
         <div className={styles.modal_outer}>
           <div className={styles.modal_box}>
-            <input type="text" placeholder="task title" />
-            {/* status */}
-            <div
-            
-              onClick={() => {setWorkSpaceOpen(!workSpaceOpen);setStatusModal(true)}}
-              className={`${styles.status} flex`}
-            >
-              <div className="flex gap-2">
-                <div className={styles.icon_align}>
-                  <Circle size={14}  />
+            <input type="text" placeholder="task title" className="mb-3" />
+            {modal.map((item, index) => {
+              const isOpen = openModal === index;
+
+              return (
+                <div
+                  key={index}
+                  onClick={() => {
+                    setOpenModal(isOpen ? null : index);
+                  }}
+                  className={`${styles.status} flex`}
+                >
+                  <div className="flex gap-2">
+                    <div className={styles.icon_align}>
+                      <span className={styles.modal_icon}>{item.icon}</span>
+                    </div>
+
+                    <div className={styles.add_task_text}>{item.text}</div>
+                  </div>
+
+                  <div>
+                    <ChevronRight
+                      size={14}
+                      className={`transition-transform duration-200 ${
+                        isOpen ? "rotate-90" : ""
+                      }`}
+                    />
+                  </div>
                 </div>
-                <div className={styles.add_task_text}> Status</div>
-              </div>
-              <div>
-                {" "}
-                <ChevronRight
-                  size={14}
-                  className={` transition-transform duration-200 ${
-                    workSpaceOpen ? "rotate-90" : ""
-                  }`}
-                />
-              </div>
-            </div>
-             {/* status end */}
+              );
+            })}
           </div>
         </div>
       )}
-      {/* status modal  */}
-      {statusModal && (
-        <div className={styles.status_modal}>dfghjkl</div>
+
+      {/* STATUS MODAL */}
+      {openModal === 0 && (
+        <div className={styles.status_modal}>
+          <p className="text-xs text-gray-500">Status</p>
+
+          <div
+            onClick={() => setSelectedStatus("todo")}
+            className="mt-2 flex justify-between"
+          >
+            <p>todo</p>
+
+            <p>{selectedStatus === "todo" && <Check size={22} />}</p>
+          </div>
+
+          <div
+            onClick={() => setSelectedStatus("doing")}
+            className="flex justify-between"
+          >
+            <p>doing</p>
+
+            <p>{selectedStatus === "doing" && <Check size={22} />}</p>
+          </div>
+
+          <div
+            onClick={() => setSelectedStatus("completed")}
+            className="flex justify-between"
+          >
+            <p>completed</p>
+
+            <p>{selectedStatus === "completed" && <Check size={22} />}</p>
+          </div>
+
+          <div
+            onClick={() => setSelectedStatus("onhold")}
+            className="flex justify-between"
+          >
+            <p>onhold</p>
+
+            <p>{selectedStatus === "onhold" && <Check size={22} />}</p>
+          </div>
+        </div>
+      )}
+
+      {/* PRIORITY MODAL */}
+      {openModal === 1 && (
+        <div className={`${styles.status_modal} mt-9`}>
+          <p className="text-xs text-gray-500">Status</p>
+
+          <div
+            onClick={() => setSelectedStatus("todo")}
+            className="mt-2 flex justify-between"
+          >
+            <p>todo</p>
+
+            <p>{selectedStatus === "todo" && <Check size={22} />}</p>
+          </div>
+
+          <div
+            onClick={() => setSelectedStatus("doing")}
+            className="flex justify-between"
+          >
+            <p>doing</p>
+
+            <p>{selectedStatus === "doing" && <Check size={22} />}</p>
+          </div>
+
+          <div
+            onClick={() => setSelectedStatus("completed")}
+            className="flex justify-between"
+          >
+            <p>completed</p>
+
+            <p>{selectedStatus === "completed" && <Check size={22} />}</p>
+          </div>
+
+          <div
+            onClick={() => setSelectedStatus("onhold")}
+            className="flex justify-between"
+          >
+            <p>onhold</p>
+
+            <p>{selectedStatus === "onhold" && <Check size={22} />}</p>
+          </div>
+        </div>
+      )}
+
+      {/* MEMBERS MODAL */}
+     {openModal === 2 && (
+        <div className={`${styles.status_modal} mt-20`}>
+          <p className="text-xs text-gray-500">Status</p>
+
+          <div
+            onClick={() => setSelectedStatus("todo")}
+            className="mt-2 flex justify-between"
+          >
+            <p>todo</p>
+
+            <p>{selectedStatus === "todo" && <Check size={22} />}</p>
+          </div>
+
+          <div
+            onClick={() => setSelectedStatus("doing")}
+            className="flex justify-between"
+          >
+            <p>doing</p>
+
+            <p>{selectedStatus === "doing" && <Check size={22} />}</p>
+          </div>
+
+          <div
+            onClick={() => setSelectedStatus("completed")}
+            className="flex justify-between"
+          >
+            <p>completed</p>
+
+            <p>{selectedStatus === "completed" && <Check size={22} />}</p>
+          </div>
+
+          <div
+            onClick={() => setSelectedStatus("onhold")}
+            className="flex justify-between"
+          >
+            <p>onhold</p>
+
+            <p>{selectedStatus === "onhold" && <Check size={22} />}</p>
+          </div>
+        </div>
+      )}
+      {/* DUE DATE MODAL */}
+       {openModal === 3 && (
+        <div className={`${styles.status_modal} mt-30`}>
+          <p className="text-xs text-gray-500">Status</p>
+
+          <div
+            onClick={() => setSelectedStatus("todo")}
+            className="mt-2 flex justify-between"
+          >
+            <p>todo</p>
+
+            <p>{selectedStatus === "todo" && <Check size={22} />}</p>
+          </div>
+
+          <div
+            onClick={() => setSelectedStatus("doing")}
+            className="flex justify-between"
+          >
+            <p>doing</p>
+
+            <p>{selectedStatus === "doing" && <Check size={22} />}</p>
+          </div>
+
+          <div
+            onClick={() => setSelectedStatus("completed")}
+            className="flex justify-between"
+          >
+            <p>completed</p>
+
+            <p>{selectedStatus === "completed" && <Check size={22} />}</p>
+          </div>
+
+          <div
+            onClick={() => setSelectedStatus("onhold")}
+            className="flex justify-between"
+          >
+            <p>onhold</p>
+
+            <p>{selectedStatus === "onhold" && <Check size={22} />}</p>
+          </div>
+        </div>
+      )}
+      {/* TEAMS MODAL */}
+       {openModal === 4 && (
+        <div className={`${styles.status_modal} mt-40`}>
+          <p className="text-xs text-gray-500">Status</p>
+
+          <div
+            onClick={() => setSelectedStatus("todo")}
+            className="mt-2 flex justify-between"
+          >
+            <p>todo</p>
+
+            <p>{selectedStatus === "todo" && <Check size={22} />}</p>
+          </div>
+
+          <div
+            onClick={() => setSelectedStatus("doing")}
+            className="flex justify-between"
+          >
+            <p>doing</p>
+
+            <p>{selectedStatus === "doing" && <Check size={22} />}</p>
+          </div>
+
+          <div
+            onClick={() => setSelectedStatus("completed")}
+            className="flex justify-between"
+          >
+            <p>completed</p>
+
+            <p>{selectedStatus === "completed" && <Check size={22} />}</p>
+          </div>
+
+          <div
+            onClick={() => setSelectedStatus("onhold")}
+            className="flex justify-between"
+          >
+            <p>onhold</p>
+
+            <p>{selectedStatus === "onhold" && <Check size={22} />}</p>
+          </div>
+        </div>
+      )}
+      {/* LABEL MODAL */}
+       {openModal === 5 && (
+        <div className={`${styles.status_modal} mt-50`}>
+          <p className="text-xs text-gray-500">Status</p>
+
+          <div
+            onClick={() => setSelectedStatus("todo")}
+            className="mt-2 flex justify-between"
+          >
+            <p>todo</p>
+
+            <p>{selectedStatus === "todo" && <Check size={22} />}</p>
+          </div>
+
+          <div
+            onClick={() => setSelectedStatus("doing")}
+            className="flex justify-between"
+          >
+            <p>doing</p>
+
+            <p>{selectedStatus === "doing" && <Check size={22} />}</p>
+          </div>
+
+          <div
+            onClick={() => setSelectedStatus("completed")}
+            className="flex justify-between"
+          >
+            <p>completed</p>
+
+            <p>{selectedStatus === "completed" && <Check size={22} />}</p>
+          </div>
+
+          <div
+            onClick={() => setSelectedStatus("onhold")}
+            className="flex justify-between"
+          >
+            <p>onhold</p>
+
+            <p>{selectedStatus === "onhold" && <Check size={22} />}</p>
+          </div>
+        </div>
+      )}
+      {/* REPORTER MODAL */}
+       {openModal === 6 && (
+        <div className={`${styles.status_modal} mt-60`}>
+          <p className="text-xs text-gray-500">Status</p>
+
+          <div
+            onClick={() => setSelectedStatus("todo")}
+            className="mt-2 flex justify-between"
+          >
+            <p>todo</p>
+
+            <p>{selectedStatus === "todo" && <Check size={22} />}</p>
+          </div>
+
+          <div
+            onClick={() => setSelectedStatus("doing")}
+            className="flex justify-between"
+          >
+            <p>doing</p>
+
+            <p>{selectedStatus === "doing" && <Check size={22} />}</p>
+          </div>
+
+          <div
+            onClick={() => setSelectedStatus("completed")}
+            className="flex justify-between"
+          >
+            <p>completed</p>
+
+            <p>{selectedStatus === "completed" && <Check size={22} />}</p>
+          </div>
+
+          <div
+            onClick={() => setSelectedStatus("onhold")}
+            className="flex justify-between"
+          >
+            <p>onhold</p>
+
+            <p>{selectedStatus === "onhold" && <Check size={22} />}</p>
+          </div>
+        </div>
       )}
     </DashboardLayout>
   );
