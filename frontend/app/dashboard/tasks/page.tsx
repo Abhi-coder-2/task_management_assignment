@@ -1,6 +1,8 @@
 "use client";
 
 import styles from "./tasks.module.css";
+import CalendarStyles from "./dueDate.module.css";
+import FieldsStyles from "./fieldsModal.module.css";
 import {
   CalendarDays,
   Check,
@@ -10,7 +12,10 @@ import {
   ChevronUp,
   Circle,
   Columns3,
+  Dot,
   Funnel,
+  Grid2x2,
+  Menu,
   MoreHorizontal,
   Search,
   Signal,
@@ -22,6 +27,8 @@ import {
 import DashboardLayout from "../page";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { DayPicker } from "react-day-picker";
+import { format } from "date-fns";
 
 type Task = {
   _id: string;
@@ -99,8 +106,20 @@ export default function TaskBoard() {
   const [loading, setLoading] = useState(true);
   const [showAddTask, setShowAddTask] = useState(false);
   const [workSpaceOpen, setWorkSpaceOpen] = useState(true);
- const [openModal, setOpenModal] = useState<number | null>(null);
-const [selectedStatus, setSelectedStatus] = useState("todo");
+  // modal state
+  const [openModal, setOpenModal] = useState<number | null>(null);
+  const [selectedStatus, setSelectedStatus] = useState("todo");
+  const [selectedPriority, setSelectedPriority] = useState("noPriority");
+  const [selectedMember, setSelectedMember] = useState("admin");
+  const [selectedDueDate, setSelectedDueDate] = useState<Date | undefined>(
+    undefined,
+  );
+  const [selectedLabel, setSelectedLabel] = useState("");
+  const [selectedTeam, setSelectedTeam] = useState("");
+  // fields state
+  const [openFields, setOpenFields] = useState(false);
+  const [checkPriority, setCheckPriority] = useState(false);
+
 
   useEffect(() => {
     fetchData();
@@ -128,14 +147,13 @@ const [selectedStatus, setSelectedStatus] = useState("todo");
 
           <div className={`${styles.task_head_right} flex`}>
             <div className="flex gap-2">
-              <input className={styles.task_head_input} type="text" />
-
               <div className={styles.search_div}>
                 <Search className={styles.task_head_icon} />
               </div>
             </div>
 
             <div
+              onClick={() => setOpenFields(!openFields)}
               className={`flex items-center justify-center gap-2 ${styles.task_icon_border}`}
             >
               <Columns3 className={styles.task_head_icon} />
@@ -313,7 +331,7 @@ const [selectedStatus, setSelectedStatus] = useState("todo");
             onClick={() => setSelectedStatus("todo")}
             className="mt-2 flex justify-between"
           >
-            <p>todo</p>
+            <p className={styles.subModal_text}>todo</p>
 
             <p>{selectedStatus === "todo" && <Check size={22} />}</p>
           </div>
@@ -322,7 +340,7 @@ const [selectedStatus, setSelectedStatus] = useState("todo");
             onClick={() => setSelectedStatus("doing")}
             className="flex justify-between"
           >
-            <p>doing</p>
+            <p className={styles.subModal_text}>doing</p>
 
             <p>{selectedStatus === "doing" && <Check size={22} />}</p>
           </div>
@@ -331,7 +349,7 @@ const [selectedStatus, setSelectedStatus] = useState("todo");
             onClick={() => setSelectedStatus("completed")}
             className="flex justify-between"
           >
-            <p>completed</p>
+            <p className={styles.subModal_text}>completed</p>
 
             <p>{selectedStatus === "completed" && <Check size={22} />}</p>
           </div>
@@ -340,7 +358,7 @@ const [selectedStatus, setSelectedStatus] = useState("todo");
             onClick={() => setSelectedStatus("onhold")}
             className="flex justify-between"
           >
-            <p>onhold</p>
+            <p className={styles.subModal_text}>onhold</p>
 
             <p>{selectedStatus === "onhold" && <Check size={22} />}</p>
           </div>
@@ -350,216 +368,230 @@ const [selectedStatus, setSelectedStatus] = useState("todo");
       {/* PRIORITY MODAL */}
       {openModal === 1 && (
         <div className={`${styles.status_modal} mt-9`}>
-          <p className="text-xs text-gray-500">Status</p>
-
+          <p className="text-xs text-gray-500">Priority</p>
           <div
-            onClick={() => setSelectedStatus("todo")}
+            onClick={() => setSelectedPriority("noPriority")}
             className="mt-2 flex justify-between"
           >
-            <p>todo</p>
+            <p className={styles.subModal_text}>
+              <span className="w-[20px]">
+                <Dot size={15} />
+              </span>
+              <span className="ms-2">No Priority</span>
+            </p>
 
-            <p>{selectedStatus === "todo" && <Check size={22} />}</p>
+            <p>{selectedPriority === "noPriority" && <Check size={22} />}</p>
           </div>
 
           <div
-            onClick={() => setSelectedStatus("doing")}
-            className="flex justify-between"
+            onClick={() => setSelectedPriority("urgent")}
+            className="mt-2 flex justify-between"
           >
-            <p>doing</p>
+            <p className={styles.subModal_text}>
+              <span className="w-[20px]">
+                <Signal color="red" size={19} />
+              </span>
+              <span className="ms-2">Urgent</span>
+            </p>
 
-            <p>{selectedStatus === "doing" && <Check size={22} />}</p>
+            <p>{selectedPriority === "urgent" && <Check size={22} />}</p>
           </div>
 
           <div
-            onClick={() => setSelectedStatus("completed")}
+            onClick={() => setSelectedPriority("high")}
             className="flex justify-between"
           >
-            <p>completed</p>
+            <p className={styles.subModal_text}>
+              <span className="w-[20px]">
+                <Signal color="red" size={19} />
+              </span>
+              <span className="ms-2">High</span>
+            </p>
 
-            <p>{selectedStatus === "completed" && <Check size={22} />}</p>
+            <p>{selectedPriority === "high" && <Check size={22} />}</p>
           </div>
 
           <div
-            onClick={() => setSelectedStatus("onhold")}
+            onClick={() => setSelectedPriority("medium")}
             className="flex justify-between"
           >
-            <p>onhold</p>
+            <p className={styles.subModal_text}>
+              <span className="w-[20px]">
+                <Signal color="red" size={19} />
+              </span>
+              <span className="ms-2">Medium</span>
+            </p>
 
-            <p>{selectedStatus === "onhold" && <Check size={22} />}</p>
+            <p>{selectedPriority === "medium" && <Check size={22} />}</p>
+          </div>
+
+          <div
+            onClick={() => setSelectedPriority("low")}
+            className="flex justify-between"
+          >
+            <p className={styles.subModal_text}>
+              <span className="w-[20px]">
+                <Signal color="gray" size={10} />
+              </span>
+              <span className="ms-2">Low</span>
+            </p>
+
+            <p>{selectedPriority === "low" && <Check size={22} />}</p>
           </div>
         </div>
       )}
 
       {/* MEMBERS MODAL */}
-     {openModal === 2 && (
+      {openModal === 2 && (
         <div className={`${styles.status_modal} mt-20`}>
-          <p className="text-xs text-gray-500">Status</p>
+          <p className="text-xs text-gray-500">Members</p>
 
           <div
-            onClick={() => setSelectedStatus("todo")}
+            onClick={() => setSelectedMember("admin")}
             className="mt-2 flex justify-between"
           >
-            <p>todo</p>
+            <p className={styles.subModal_text}>Admin</p>
 
-            <p>{selectedStatus === "todo" && <Check size={22} />}</p>
+            <p>{selectedMember === "admin" && <Check size={22} />}</p>
           </div>
 
           <div
-            onClick={() => setSelectedStatus("doing")}
+            onClick={() => setSelectedMember("cn")}
             className="flex justify-between"
           >
-            <p>doing</p>
+            <p className={styles.subModal_text}>CN</p>
 
-            <p>{selectedStatus === "doing" && <Check size={22} />}</p>
+            <p>{selectedMember === "cn" && <Check size={22} />}</p>
           </div>
 
           <div
-            onClick={() => setSelectedStatus("completed")}
+            onClick={() => setSelectedMember("ab")}
             className="flex justify-between"
           >
-            <p>completed</p>
+            <p className={styles.subModal_text}>AB</p>
 
-            <p>{selectedStatus === "completed" && <Check size={22} />}</p>
-          </div>
-
-          <div
-            onClick={() => setSelectedStatus("onhold")}
-            className="flex justify-between"
-          >
-            <p>onhold</p>
-
-            <p>{selectedStatus === "onhold" && <Check size={22} />}</p>
+            <p>{selectedMember === "ab" && <Check size={22} />}</p>
           </div>
         </div>
       )}
       {/* DUE DATE MODAL */}
-       {openModal === 3 && (
-        <div className={`${styles.status_modal} mt-30`}>
-          <p className="text-xs text-gray-500">Status</p>
+      {openModal === 3 && (
+        <div className={`${CalendarStyles.date_modal} mt-30`}>
+          <DayPicker
+            mode="single"
+            selected={selectedDueDate}
+            onSelect={(date) => {
+              setSelectedDueDate(date);
+              setOpenModal(null);
+            }}
+            className={CalendarStyles.calendar}
+            classNames={{
+              months: CalendarStyles.months,
+              month: CalendarStyles.month,
+              month_caption: CalendarStyles.month_caption,
+              caption_label: CalendarStyles.caption_label,
+              nav: CalendarStyles.nav,
+              button_previous: CalendarStyles.nav_button,
+              button_next: CalendarStyles.nav_button,
+              month_grid: CalendarStyles.month_grid,
+              weekdays: CalendarStyles.weekdays,
+              weekday: CalendarStyles.weekday,
+              week: CalendarStyles.week,
+              day: CalendarStyles.day,
+              day_button: CalendarStyles.day_button,
+              selected: CalendarStyles.selected,
+              today: CalendarStyles.today,
+              outside: CalendarStyles.outside,
+            }}
+          />
 
-          <div
-            onClick={() => setSelectedStatus("todo")}
-            className="mt-2 flex justify-between"
-          >
-            <p>todo</p>
-
-            <p>{selectedStatus === "todo" && <Check size={22} />}</p>
-          </div>
-
-          <div
-            onClick={() => setSelectedStatus("doing")}
-            className="flex justify-between"
-          >
-            <p>doing</p>
-
-            <p>{selectedStatus === "doing" && <Check size={22} />}</p>
-          </div>
-
-          <div
-            onClick={() => setSelectedStatus("completed")}
-            className="flex justify-between"
-          >
-            <p>completed</p>
-
-            <p>{selectedStatus === "completed" && <Check size={22} />}</p>
-          </div>
-
-          <div
-            onClick={() => setSelectedStatus("onhold")}
-            className="flex justify-between"
-          >
-            <p>onhold</p>
-
-            <p>{selectedStatus === "onhold" && <Check size={22} />}</p>
-          </div>
+          {selectedDueDate && (
+            <p className="mt-1 text-center text-[11px] text-gray-500">
+              {format(selectedDueDate, "dd MMM yyyy")}
+            </p>
+          )}
         </div>
       )}
       {/* TEAMS MODAL */}
-       {openModal === 4 && (
+      {openModal === 4 && (
         <div className={`${styles.status_modal} mt-40`}>
-          <p className="text-xs text-gray-500">Status</p>
-
+          <p className="text-xs text-gray-500">Team</p>
           <div
-            onClick={() => setSelectedStatus("todo")}
+            onClick={() => setSelectedTeam("deployment")}
             className="mt-2 flex justify-between"
           >
-            <p>todo</p>
+            <p className={styles.subModal_text}>deployment</p>
+            <p>{selectedTeam === "deployment" && <Check size={22} />}</p>
+          </div>
+          <div
+            onClick={() => setSelectedTeam("design")}
+            className="flex justify-between"
+          >
+            <p className={styles.subModal_text}>Design</p>
 
-            <p>{selectedStatus === "todo" && <Check size={22} />}</p>
+            <p>{selectedTeam === "design" && <Check size={22} />}</p>
           </div>
 
           <div
-            onClick={() => setSelectedStatus("doing")}
+            onClick={() => setSelectedTeam("audit")}
             className="flex justify-between"
           >
-            <p>doing</p>
+            <p className={styles.subModal_text}>Audit</p>
 
-            <p>{selectedStatus === "doing" && <Check size={22} />}</p>
+            <p>{selectedTeam === "audit" && <Check size={22} />}</p>
           </div>
 
           <div
-            onClick={() => setSelectedStatus("completed")}
+            onClick={() => setSelectedTeam("scheduled")}
             className="flex justify-between"
           >
-            <p>completed</p>
+            <p className={styles.subModal_text}>Scheduled</p>
 
-            <p>{selectedStatus === "completed" && <Check size={22} />}</p>
-          </div>
-
-          <div
-            onClick={() => setSelectedStatus("onhold")}
-            className="flex justify-between"
-          >
-            <p>onhold</p>
-
-            <p>{selectedStatus === "onhold" && <Check size={22} />}</p>
+            <p>{selectedTeam === "scheduled" && <Check size={22} />}</p>
           </div>
         </div>
       )}
       {/* LABEL MODAL */}
-       {openModal === 5 && (
+      {openModal === 5 && (
         <div className={`${styles.status_modal} mt-50`}>
-          <p className="text-xs text-gray-500">Status</p>
-
+          <p className="text-xs text-gray-500">Label</p>
           <div
-            onClick={() => setSelectedStatus("todo")}
+            onClick={() => setSelectedLabel("deployment")}
             className="mt-2 flex justify-between"
           >
-            <p>todo</p>
+            <p className={styles.subModal_text}>deployment</p>
+            <p>{selectedLabel === "deployment" && <Check size={22} />}</p>
+          </div>
+          <div
+            onClick={() => setSelectedLabel("design")}
+            className="flex justify-between"
+          >
+            <p className={styles.subModal_text}>Design</p>
 
-            <p>{selectedStatus === "todo" && <Check size={22} />}</p>
+            <p>{selectedLabel === "design" && <Check size={22} />}</p>
           </div>
 
           <div
-            onClick={() => setSelectedStatus("doing")}
+            onClick={() => setSelectedLabel("audit")}
             className="flex justify-between"
           >
-            <p>doing</p>
+            <p className={styles.subModal_text}>Audit</p>
 
-            <p>{selectedStatus === "doing" && <Check size={22} />}</p>
+            <p>{selectedLabel === "audit" && <Check size={22} />}</p>
           </div>
 
           <div
-            onClick={() => setSelectedStatus("completed")}
+            onClick={() => setSelectedLabel("scheduled")}
             className="flex justify-between"
           >
-            <p>completed</p>
+            <p className={styles.subModal_text}>Scheduled</p>
 
-            <p>{selectedStatus === "completed" && <Check size={22} />}</p>
-          </div>
-
-          <div
-            onClick={() => setSelectedStatus("onhold")}
-            className="flex justify-between"
-          >
-            <p>onhold</p>
-
-            <p>{selectedStatus === "onhold" && <Check size={22} />}</p>
+            <p>{selectedLabel === "scheduled" && <Check size={22} />}</p>
           </div>
         </div>
       )}
       {/* REPORTER MODAL */}
-       {openModal === 6 && (
+      {openModal === 6 && (
         <div className={`${styles.status_modal} mt-60`}>
           <p className="text-xs text-gray-500">Status</p>
 
@@ -597,6 +629,71 @@ const [selectedStatus, setSelectedStatus] = useState("todo");
             <p>onhold</p>
 
             <p>{selectedStatus === "onhold" && <Check size={22} />}</p>
+          </div>
+        </div>
+      )}
+
+      {/* fields Modal */}
+      {openFields && (
+        <div className={`${FieldsStyles.fields_modal}  bg-white`}>
+          <div className={FieldsStyles.fields_modal_header}>
+            <div className={FieldsStyles.fields_modal_header_div1}>
+              {" "}
+              <Menu size={18} />
+              <span>List</span>
+            </div>
+            <div className={FieldsStyles.fields_modal_header_div2}>
+              <Grid2x2 size={18} /> <span>Board</span>
+            </div>
+          </div>
+          {/* priority */}
+          <div onClick={()=>setCheckPriority(!checkPriority)} className={`${FieldsStyles.fields_modal_body_outer} mt-3`}>
+            <div className={FieldsStyles.fields_modal_body}>
+              <div>Priority</div>
+              <div className={FieldsStyles.boards_check}>{checkPriority && <span className={FieldsStyles.check_icon}> <Check size={18} color="white"  /></span>}</div>
+            </div>     
+          </div>
+             {/* priority */}
+          <div onClick={()=>setCheckPriority(!checkPriority)} className={FieldsStyles.fields_modal_body_outer}>
+            <div className={FieldsStyles.fields_modal_body}>
+              <div>Priority</div>
+              <div className={FieldsStyles.boards_check}>{checkPriority && <span className={FieldsStyles.check_icon}> <Check size={18} color="white"  /></span>}</div>
+            </div>     
+          </div>
+             {/* priority */}
+          <div onClick={()=>setCheckPriority(!checkPriority)} className={FieldsStyles.fields_modal_body_outer}>
+            <div className={FieldsStyles.fields_modal_body}>
+              <div>Priority</div>
+              <div className={FieldsStyles.boards_check}>{checkPriority && <span className={FieldsStyles.check_icon}> <Check size={18} color="white"  /></span>}</div>
+            </div>     
+          </div>
+             {/* priority */}
+          <div onClick={()=>setCheckPriority(!checkPriority)} className={FieldsStyles.fields_modal_body_outer}>
+            <div className={FieldsStyles.fields_modal_body}>
+              <div>Priority</div>
+              <div className={FieldsStyles.boards_check}>{checkPriority && <span className={FieldsStyles.check_icon}> <Check size={18} color="white"  /></span>}</div>
+            </div>     
+          </div>
+             {/* priority */}
+          <div onClick={()=>setCheckPriority(!checkPriority)} className={FieldsStyles.fields_modal_body_outer}>
+            <div className={FieldsStyles.fields_modal_body}>
+              <div>Priority</div>
+              <div className={FieldsStyles.boards_check}>{checkPriority && <span className={FieldsStyles.check_icon}> <Check size={18} color="white"  /></span>}</div>
+            </div>     
+          </div>
+             {/* priority */}
+          <div onClick={()=>setCheckPriority(!checkPriority)} className={FieldsStyles.fields_modal_body_outer}>
+            <div className={FieldsStyles.fields_modal_body}>
+              <div>Priority</div>
+              <div className={FieldsStyles.boards_check}>{checkPriority && <span className={FieldsStyles.check_icon}> <Check size={18} color="white"  /></span>}</div>
+            </div>     
+          </div>
+             {/* priority */}
+          <div onClick={()=>setCheckPriority(!checkPriority)} className={FieldsStyles.fields_modal_body_outer}>
+            <div className={FieldsStyles.fields_modal_body}>
+              <div>Priority</div>
+              <div className={FieldsStyles.boards_check}>{checkPriority && <span className={FieldsStyles.check_icon}> <Check size={18} color="white"  /></span>}</div>
+            </div>     
           </div>
         </div>
       )}
