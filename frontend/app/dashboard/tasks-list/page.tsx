@@ -28,7 +28,7 @@ import styles from "../tasks/tasks.module.css";
 import CalendarStyles from "../tasks/dueDate.module.css";
 import FieldsStyles from "../tasks/fieldsModal.module.css";
 import DashboardLayout from "../page";
-import taskListStyles from '../tasks-list/taskList.module.css';
+import taskListStyles from './taskList.module.css'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -127,7 +127,7 @@ export default function TaskList() {
         <div
           className={`${styles.task_header} bg-white fixed pr-70 w-full top-15 mb-5 z-20 flex items-center justify-between px-5`}
         >
-          <div className="text-1xs font-bold">Projects</div>
+          <div className="text-1xs font-bold">Tasks</div>
 
           <div className={`${styles.task_head_right} flex`}>
             <div className="flex gap-2">
@@ -164,43 +164,56 @@ export default function TaskList() {
           {loading ? (
             <div className="p-4 text-sm text-gray-500">Loading tasks...</div>
           ) : (
-             <div
-                  
+            columns.map((column) => {
+              const columnTasks = cardData.filter(
+                (task) => task.status === column.id
+              );
+
+              return (
+                <div
+                  key={column.id}
                   className={`${taskListStyles["column-tasks"]} shrink-0 rounded-lg`}
                 >
                   {/* COLUMN HEADER */}
                   <div className=" flex items-center justify-between ">
                     <div>
-                      
+                      <h2 className=" font-semibold text-xs text-gray-800 mb-3">
+                        {column.title}
+                      </h2>  
                       {/* COLUMN TASK HEADER */}
                       <div className={`${taskListStyles["column-task-header-outer"]}`}>
                       <div className={`${taskListStyles["column-task-header"]}  `}>
-                        <div className={`${taskListStyles["column-task-cell-1"]} ${taskListStyles["column-task-cell-text"]}`}>Projects</div>
+                        <div className={`${taskListStyles["column-task-cell-1"]} ${taskListStyles["column-task-cell-text"]}`}>Task</div>
                         <div className={`${taskListStyles["column-task-cell"]} ${taskListStyles["column-task-cell-text"]}`}>Priority</div>
-                        <div className={`${taskListStyles["column-task-cell"]} ${taskListStyles["column-task-cell-text"]}`}>Leads</div>
+                        <div className={`${taskListStyles["column-task-cell"]} ${taskListStyles["column-task-cell-text"]}`}>Members</div>
                         <div className={`${taskListStyles["column-task-cell"]} ${taskListStyles["column-task-cell-text"]}`}>Due Date</div>
                         <div className={`${taskListStyles["column-task-cell"]} ${taskListStyles["column-task-cell-text"]}`}>Actions</div>
                       </div>
                   {/* CARDS */}
                   <div className="flex flex-col">
-                    {cardData.map((task) =>{
-                       return (
+                    {columnTasks.map((task) => (
                       <div key={task._id} className={`${taskListStyles["card-outer"]}`}>
-                       <div className={`${taskListStyles["column-task-cell-1"]}`}>Project</div>
+                       <div className={`${taskListStyles["column-task-cell-1"]}`}>Task</div>
                         <div className={`${taskListStyles["column-task-cell"]}`}>Priority</div>
-                        <div className={`${taskListStyles["column-task-cell"]}`}>Leads</div>
+                        <div className={`${taskListStyles["column-task-cell"]}`}>Members</div>
                         <div className={`${taskListStyles["column-task-cell"]}`}>Due Date</div>
                         <div className={`${taskListStyles["column-task-cell"]}`}><MoreHorizontal/></div>
                       </div>
-                    )
-                    })}
+                    ))}
                   </div>
                   {/* ADD TASK */}
-                  
+                  <button
+                    type="button"
+                    className="mt-3 w-full rounded-lg px-2 py-2 text-left text-sm text-gray-600 hover:bg-gray-200"
+                  >
+                    + Add Task
+                  </button>
                    </div>
                   </div>
                   </div>
                 </div>
+              );
+            })
           )}
         </div>
       </div>

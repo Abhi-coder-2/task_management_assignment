@@ -20,6 +20,10 @@ import {
   FolderKanban,
   CalendarDays,
   Clock3,
+  Code,
+  ChevronRight,
+  Settings,
+  Palette,
 } from "lucide-react";
 import Link from "next/link";
 import tasks from "./tasks/page";
@@ -177,9 +181,10 @@ export default function DashboardLayout({children}:DashboardLayoutProps) {
   const [darkMode, setDarkMode] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [workSpaceOpen, setWorkSpaceOpen] = useState(true);
+  const [userOpen, setUserOpen] = useState(false);
   return (
     <>
-      <div
+      <div 
         className={`min-h-screen ${darkMode ? "bg-[#111318]" : "bg-[#ffffff]"}`}
       >
         {/*-----------------------mobile overLay-------------------- */}
@@ -197,12 +202,14 @@ export default function DashboardLayout({children}:DashboardLayoutProps) {
         >
           {/* --logo--*/}
           <div className="flex h-[64px] items-center justify-between border-b border-white/10">
-            <div className="flex items-center gap-2 px-5">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-purple-600 text-sm font-bold">
-                D
+          {/* USER PROFILE AND MODE */}
+            <div onClick={() => setUserOpen(!userOpen)} className="flex items-center gap-2 px-5 cursor-pointer">
+              <div className={`${styles.workspace_img} flex h-8 w-8 items-center justify-center`}>
+                <img src="/admin.jpg" alt="" />
               </div>
 
               <span className="text-sm font-semibold">Dexter</span>
+              <span className={styles.workspace_icon}><Code size={15}/></span>
             </div>
             <button onClick={() => setSidebarOpen(false)} className={`${styles.pointer} lg:hidden`}>
               <X size={19} />
@@ -282,6 +289,24 @@ export default function DashboardLayout({children}:DashboardLayoutProps) {
           </section>
         </main>
       </div>
+
+      USER PROFILE DROPDOWN
+      {userOpen && (
+        <div className={styles.user_dropdown}>
+          <X  onClick={() => setUserOpen(!userOpen)} className="ml-auto mt-2 mr-2 cursor-pointer" size={13}/>
+          <div className={`${styles.user_dropdown_header} ${styles.dropdown_header}`}>
+            <div className={`${styles.workspace_img}`}><img src="/admin.jpg" alt="" /></div>
+            <div className="mt-1">Dexter</div>
+            <div>john.doe@example.com</div>
+          </div>
+          <div className={`${styles.dropdown_header} ${styles.user_dropdown_footer}`}>
+           <div className="flex justify-between cursor-pointer"><div><span><Sun /> </span><span className="ml-2">Change Theme</span></div><div><ChevronRight /></div></div>
+           <div className="flex justify-between cursor-pointer"><div><span><Palette /></span><span className="ml-2">Color Mode</span></div><div><ChevronRight /></div></div>
+           <div className="flex justify-between cursor-pointer"><div><span><Settings /> </span><span className="ml-2">Settings</span></div></div>
+           
+          </div>
+        </div>
+      )}
     </>
   );
 }

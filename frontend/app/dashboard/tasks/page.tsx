@@ -29,6 +29,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { DayPicker } from "react-day-picker";
 import { format } from "date-fns";
+import Link from "next/link";
 
 type Task = {
   _id: string;
@@ -119,6 +120,12 @@ export default function TaskBoard() {
   // fields state
   const [openFields, setOpenFields] = useState(false);
   const [checkPriority, setCheckPriority] = useState(false);
+  const [checkMembers, setCheckMembers] = useState(false);
+  const [checkDueDate, setCheckDueDate] = useState(false);
+  const [checkLabels, setCheckLabels] = useState(false);
+  const [checkStatus, setCheckStatus] = useState(false);
+  const [checkReporter, setCheckReporter] = useState(false);
+  const [checkTeams, setCheckTeams] = useState(false);
 
 
   useEffect(() => {
@@ -640,7 +647,7 @@ export default function TaskBoard() {
             <div className={FieldsStyles.fields_modal_header_div1}>
               {" "}
               <Menu size={18} />
-              <span>List</span>
+              <span><Link href="/dashboard/tasks-list">List</Link> </span>
             </div>
             <div className={FieldsStyles.fields_modal_header_div2}>
               <Grid2x2 size={18} /> <span>Board</span>
@@ -649,50 +656,50 @@ export default function TaskBoard() {
           {/* priority */}
           <div onClick={()=>setCheckPriority(!checkPriority)} className={`${FieldsStyles.fields_modal_body_outer} mt-3`}>
             <div className={FieldsStyles.fields_modal_body}>
-              <div>Priority</div>
+              <div className={styles.subModal_text}>Priority</div>
               <div className={FieldsStyles.boards_check}>{checkPriority && <span className={FieldsStyles.check_icon}> <Check size={18} color="white"  /></span>}</div>
             </div>     
           </div>
-             {/* priority */}
-          <div onClick={()=>setCheckPriority(!checkPriority)} className={FieldsStyles.fields_modal_body_outer}>
+             {/* members */}
+          <div onClick={()=>setCheckMembers(!checkMembers)} className={FieldsStyles.fields_modal_body_outer}>
             <div className={FieldsStyles.fields_modal_body}>
-              <div>Priority</div>
-              <div className={FieldsStyles.boards_check}>{checkPriority && <span className={FieldsStyles.check_icon}> <Check size={18} color="white"  /></span>}</div>
+              <div className={styles.subModal_text}>Members</div>
+              <div className={FieldsStyles.boards_check}>{checkMembers && <span className={FieldsStyles.check_icon}> <Check size={18} color="white"  /></span>}</div>
             </div>     
           </div>
-             {/* priority */}
-          <div onClick={()=>setCheckPriority(!checkPriority)} className={FieldsStyles.fields_modal_body_outer}>
+             {/* Duedate*/}
+          <div onClick={()=>setCheckDueDate(!checkDueDate)} className={FieldsStyles.fields_modal_body_outer}>
             <div className={FieldsStyles.fields_modal_body}>
-              <div>Priority</div>
-              <div className={FieldsStyles.boards_check}>{checkPriority && <span className={FieldsStyles.check_icon}> <Check size={18} color="white"  /></span>}</div>
+              <div className={styles.subModal_text}>Due Date</div>
+              <div className={FieldsStyles.boards_check}>{checkDueDate && <span className={FieldsStyles.check_icon}> <Check size={18} color="white"  /></span>}</div>
             </div>     
           </div>
-             {/* priority */}
-          <div onClick={()=>setCheckPriority(!checkPriority)} className={FieldsStyles.fields_modal_body_outer}>
+             {/* Labels */}
+          <div onClick={()=>setCheckLabels(!checkLabels)} className={FieldsStyles.fields_modal_body_outer}>
             <div className={FieldsStyles.fields_modal_body}>
-              <div>Priority</div>
-              <div className={FieldsStyles.boards_check}>{checkPriority && <span className={FieldsStyles.check_icon}> <Check size={18} color="white"  /></span>}</div>
+              <div className={styles.subModal_text}>Labels</div>
+              <div className={FieldsStyles.boards_check}>{checkLabels && <span className={FieldsStyles.check_icon}> <Check size={18} color="white"  /></span>}</div>
             </div>     
           </div>
-             {/* priority */}
-          <div onClick={()=>setCheckPriority(!checkPriority)} className={FieldsStyles.fields_modal_body_outer}>
+             {/* status */}
+          <div onClick={()=>setCheckStatus(!checkStatus)} className={FieldsStyles.fields_modal_body_outer}>
             <div className={FieldsStyles.fields_modal_body}>
-              <div>Priority</div>
-              <div className={FieldsStyles.boards_check}>{checkPriority && <span className={FieldsStyles.check_icon}> <Check size={18} color="white"  /></span>}</div>
+              <div className={styles.subModal_text}>Status</div>
+              <div className={FieldsStyles.boards_check}>{checkStatus && <span className={FieldsStyles.check_icon}> <Check size={18} color="white"  /></span>}</div>
             </div>     
           </div>
-             {/* priority */}
-          <div onClick={()=>setCheckPriority(!checkPriority)} className={FieldsStyles.fields_modal_body_outer}>
+             {/* teams */}
+          <div onClick={()=>setCheckTeams(!checkTeams)} className={FieldsStyles.fields_modal_body_outer}>
             <div className={FieldsStyles.fields_modal_body}>
-              <div>Priority</div>
-              <div className={FieldsStyles.boards_check}>{checkPriority && <span className={FieldsStyles.check_icon}> <Check size={18} color="white"  /></span>}</div>
+              <div className={styles.subModal_text}>Teams</div>
+              <div className={FieldsStyles.boards_check}>{checkTeams && <span className={FieldsStyles.check_icon}> <Check size={18} color="white"  /></span>}</div>
             </div>     
           </div>
-             {/* priority */}
-          <div onClick={()=>setCheckPriority(!checkPriority)} className={FieldsStyles.fields_modal_body_outer}>
+              {/* Reporter */}
+          <div onClick={()=>setCheckReporter(!checkReporter)} className={FieldsStyles.fields_modal_body_outer}>
             <div className={FieldsStyles.fields_modal_body}>
-              <div>Priority</div>
-              <div className={FieldsStyles.boards_check}>{checkPriority && <span className={FieldsStyles.check_icon}> <Check size={18} color="white"  /></span>}</div>
+              <div className={styles.subModal_text}>Reporter</div>
+              <div className={FieldsStyles.boards_check}>{checkReporter && <span className={FieldsStyles.check_icon}> <Check size={18} color="white"  /></span>}</div>
             </div>     
           </div>
         </div>
