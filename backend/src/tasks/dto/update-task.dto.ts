@@ -1,7 +1,9 @@
 import {
+  IsArray,
   IsDateString,
   IsEnum,
   IsMongoId,
+  IsNotEmpty,
   IsOptional,
   IsString,
 } from 'class-validator';
@@ -9,35 +11,37 @@ import {
 export class UpdateTaskDto {
   @IsOptional()
   @IsString()
+  @IsNotEmpty()
   title?: string;
-
-  @IsOptional()
-  @IsString()
-  description?: string;
-
-  @IsOptional()
-  @IsEnum([
-    'Development',
-    'Design',
-    'Marketing',
-    'Testing',
-    'Documentation',
-  ])
-  category?: string;
-
-  @IsOptional()
-  @IsEnum(['Low', 'Medium', 'High'])
-  priority?: string;
 
   @IsOptional()
   @IsEnum(['todo', 'doing', 'completed', 'onhold'])
   status?: string;
 
   @IsOptional()
+  @IsEnum(['Low', 'Medium', 'High'])
+  priority?: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsMongoId({ each: true })
+  members?: string[];
+
+  @IsOptional()
   @IsDateString()
   dueDate?: string;
 
   @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  labels?: string[];
+
+  @IsOptional()
+  @IsArray()
+  @IsMongoId({ each: true })
+  teams?: string[];
+
+  @IsOptional()
   @IsMongoId()
-  assignedTo?: string;
+  reporter?: string;
 }

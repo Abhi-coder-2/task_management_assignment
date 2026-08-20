@@ -1,4 +1,5 @@
 import {
+  IsArray,
   IsDateString,
   IsEnum,
   IsMongoId,
@@ -10,33 +11,36 @@ import {
 export class CreateTaskDto {
   @IsString()
   @IsNotEmpty()
-  title: string | undefined;
-
-  @IsString()
-  @IsNotEmpty()
-  description: string | undefined;
-
-  @IsEnum([
-    'Development',
-    'Design',
-    'Marketing',
-    'Testing',
-    'Documentation',
-  ])
-  category: string | undefined;
-
-  @IsEnum(['Low', 'Medium', 'High'])
-  priority: string | undefined;
+  title: string;
 
   @IsOptional()
   @IsEnum(['todo', 'doing', 'completed', 'onhold'])
   status?: string;
 
   @IsOptional()
+  @IsEnum(['Low', 'Medium', 'High'])
+  priority?: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsMongoId({ each: true })
+  members?: string[];
+
+  @IsOptional()
   @IsDateString()
   dueDate?: string;
 
   @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  labels?: string[];
+
+  @IsOptional()
+  @IsArray()
+  @IsMongoId({ each: true })
+  teams?: string[];
+
+  @IsOptional()
   @IsMongoId()
-  assignedTo?: string;
+  reporter?: string;
 }

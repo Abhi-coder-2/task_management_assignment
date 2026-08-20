@@ -17,14 +17,12 @@ export class TasksService {
     private readonly taskModel: Model<TaskDocument>,
   ) {}
 
-  // CREATE
   async create(createTaskDto: CreateTaskDto) {
     const task = new this.taskModel(createTaskDto);
 
     return await task.save();
   }
 
-  // GET ALL
   async findAll() {
     return await this.taskModel
       .find()
@@ -32,9 +30,10 @@ export class TasksService {
       .exec();
   }
 
-  // GET ONE
   async findOne(id: string) {
-    const task = await this.taskModel.findById(id).exec();
+    const task = await this.taskModel
+      .findById(id)
+      .exec();
 
     if (!task) {
       throw new NotFoundException('Task not found');
@@ -43,8 +42,10 @@ export class TasksService {
     return task;
   }
 
-  // UPDATE
-  async update(id: string, updateTaskDto: UpdateTaskDto) {
+  async update(
+    id: string,
+    updateTaskDto: UpdateTaskDto,
+  ) {
     const task = await this.taskModel
       .findByIdAndUpdate(
         id,
@@ -63,7 +64,6 @@ export class TasksService {
     return task;
   }
 
-  // DELETE
   async remove(id: string) {
     const task = await this.taskModel
       .findByIdAndDelete(id)

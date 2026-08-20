@@ -18,25 +18,21 @@ export class TasksController {
     private readonly tasksService: TasksService,
   ) {}
 
-  // CREATE
   @Post()
   create(@Body() createTaskDto: CreateTaskDto) {
     return this.tasksService.create(createTaskDto);
   }
 
-  // GET ALL
   @Get()
   findAll() {
     return this.tasksService.findAll();
   }
 
-  // GET ONE
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.tasksService.findOne(id);
   }
 
-  // UPDATE
   @Patch(':id')
   update(
     @Param('id') id: string,
@@ -45,7 +41,6 @@ export class TasksController {
     return this.tasksService.update(id, updateTaskDto);
   }
 
-  // DELETE
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.tasksService.remove(id);

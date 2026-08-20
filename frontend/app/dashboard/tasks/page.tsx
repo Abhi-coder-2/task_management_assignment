@@ -23,6 +23,7 @@ import {
   UserRound,
   Users,
   UsersRound,
+  X,
 } from "lucide-react";
 import DashboardLayout from "../page";
 import { useEffect, useState } from "react";
@@ -117,6 +118,8 @@ export default function TaskBoard() {
   );
   const [selectedLabel, setSelectedLabel] = useState("");
   const [selectedTeam, setSelectedTeam] = useState("");
+  const [selectedReporter, setSelectedReporter] = useState("xyz");
+  const [taskTitle, setTaskTitle] = useState("");
   // fields state
   const [openFields, setOpenFields] = useState(false);
   const [checkPriority, setCheckPriority] = useState(false);
@@ -127,10 +130,13 @@ export default function TaskBoard() {
   const [checkReporter, setCheckReporter] = useState(false);
   const [checkTeams, setCheckTeams] = useState(false);
 
-
   useEffect(() => {
     fetchData();
   }, []);
+  //------------------------------------------------------------------
+  //GET CARD DATA FUNCTION
+  //------------------------------------------------------------------
+
   const fetchData = async () => {
     try {
       const res = await axios.get("http://localhost:3001/tasks");
@@ -142,6 +148,24 @@ export default function TaskBoard() {
     }
   };
   console.log(cardData, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+  //------------------------------------------------------------------
+  //POST CARD DATA FUNCTION
+  //------------------------------------------------------------------
+  const postData = () => {
+    console.log(
+      {
+        taskTitle,
+        selectedStatus,
+        selectedPriority,
+        selectedMember,
+        selectedDueDate,
+        selectedLabel,
+        selectedTeam,
+        selectedReporter,
+      },
+      "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS",
+    );
+  };
 
   return (
     <DashboardLayout>
@@ -239,7 +263,7 @@ export default function TaskBoard() {
                               <img
                                 className={styles.user_card_img}
                                 src="/admin.jpg"
-                                alt=""
+                                alt="Admin"
                               />
                             </span>
                             <span className="text-xs mt-1">Admin</span>
@@ -293,8 +317,21 @@ export default function TaskBoard() {
       </div>
       {showAddTask && (
         <div className={styles.modal_outer}>
+          <div
+            onClick={() => setShowAddTask(false)}
+            className="flex justify-end p-2 cursor-pointer"
+          >
+            {" "}
+            <X size={14} />
+          </div>
           <div className={styles.modal_box}>
-            <input type="text" placeholder="task title" className="mb-3" />
+            <input
+              value={taskTitle}
+              onChange={(e) => setTaskTitle(e.target.value)}
+              type="text"
+              placeholder="Task Title"
+              className="mb-3"
+            />
             {modal.map((item, index) => {
               const isOpen = openModal === index;
 
@@ -325,6 +362,17 @@ export default function TaskBoard() {
                 </div>
               );
             })}
+          </div>
+          <div
+            onClick={() => {
+              postData();
+              setShowAddTask(!showAddTask);
+              setOpenModal(null);
+            }}
+            className="flex justify-center w-[100%] cursor-pointer bg-gray-200 hover:bg-gray-300 rounded"
+          >
+            {" "}
+            <button className="btn">Add</button>
           </div>
         </div>
       )}
@@ -600,42 +648,42 @@ export default function TaskBoard() {
       {/* REPORTER MODAL */}
       {openModal === 6 && (
         <div className={`${styles.status_modal} mt-60`}>
-          <p className="text-xs text-gray-500">Status</p>
+          <p className="text-xs text-gray-500">Reporter</p>
 
           <div
-            onClick={() => setSelectedStatus("todo")}
+            onClick={() => setSelectedReporter("admin")}
             className="mt-2 flex justify-between"
           >
-            <p>todo</p>
+            <p>admin</p>
 
-            <p>{selectedStatus === "todo" && <Check size={22} />}</p>
+            <p>{selectedReporter === "admin" && <Check size={22} />}</p>
           </div>
 
           <div
-            onClick={() => setSelectedStatus("doing")}
+            onClick={() => setSelectedReporter("abc")}
             className="flex justify-between"
           >
-            <p>doing</p>
+            <p>abc</p>
 
-            <p>{selectedStatus === "doing" && <Check size={22} />}</p>
+            <p>{selectedReporter === "abc" && <Check size={22} />}</p>
           </div>
 
           <div
-            onClick={() => setSelectedStatus("completed")}
+            onClick={() => setSelectedReporter("aaa")}
             className="flex justify-between"
           >
-            <p>completed</p>
+            <p>aaa</p>
 
-            <p>{selectedStatus === "completed" && <Check size={22} />}</p>
+            <p>{selectedReporter === "aaa" && <Check size={22} />}</p>
           </div>
 
           <div
-            onClick={() => setSelectedStatus("onhold")}
+            onClick={() => setSelectedReporter("xyz")}
             className="flex justify-between"
           >
-            <p>onhold</p>
+            <p>xyz</p>
 
-            <p>{selectedStatus === "onhold" && <Check size={22} />}</p>
+            <p>{selectedReporter === "xyz" && <Check size={22} />}</p>
           </div>
         </div>
       )}
@@ -647,63 +695,136 @@ export default function TaskBoard() {
             <div className={FieldsStyles.fields_modal_header_div1}>
               {" "}
               <Menu size={18} />
-              <span><Link href="/dashboard/tasks-list">List</Link> </span>
+              <span>
+                <Link href="/dashboard/tasks-list">List</Link>{" "}
+              </span>
             </div>
             <div className={FieldsStyles.fields_modal_header_div2}>
               <Grid2x2 size={18} /> <span>Board</span>
             </div>
           </div>
           {/* priority */}
-          <div onClick={()=>setCheckPriority(!checkPriority)} className={`${FieldsStyles.fields_modal_body_outer} mt-3`}>
+          <div
+            onClick={() => setCheckPriority(!checkPriority)}
+            className={`${FieldsStyles.fields_modal_body_outer} mt-3`}
+          >
             <div className={FieldsStyles.fields_modal_body}>
               <div className={styles.subModal_text}>Priority</div>
-              <div className={FieldsStyles.boards_check}>{checkPriority && <span className={FieldsStyles.check_icon}> <Check size={18} color="white"  /></span>}</div>
-            </div>     
+              <div className={FieldsStyles.boards_check}>
+                {checkPriority && (
+                  <span className={FieldsStyles.check_icon}>
+                    {" "}
+                    <Check size={18} color="white" />
+                  </span>
+                )}
+              </div>
+            </div>
           </div>
-             {/* members */}
-          <div onClick={()=>setCheckMembers(!checkMembers)} className={FieldsStyles.fields_modal_body_outer}>
+          {/* members */}
+          <div
+            onClick={() => setCheckMembers(!checkMembers)}
+            className={FieldsStyles.fields_modal_body_outer}
+          >
             <div className={FieldsStyles.fields_modal_body}>
               <div className={styles.subModal_text}>Members</div>
-              <div className={FieldsStyles.boards_check}>{checkMembers && <span className={FieldsStyles.check_icon}> <Check size={18} color="white"  /></span>}</div>
-            </div>     
+              <div className={FieldsStyles.boards_check}>
+                {checkMembers && (
+                  <span className={FieldsStyles.check_icon}>
+                    {" "}
+                    <Check size={18} color="white" />
+                  </span>
+                )}
+              </div>
+            </div>
           </div>
-             {/* Duedate*/}
-          <div onClick={()=>setCheckDueDate(!checkDueDate)} className={FieldsStyles.fields_modal_body_outer}>
+          {/* Duedate*/}
+          <div
+            onClick={() => setCheckDueDate(!checkDueDate)}
+            className={FieldsStyles.fields_modal_body_outer}
+          >
             <div className={FieldsStyles.fields_modal_body}>
               <div className={styles.subModal_text}>Due Date</div>
-              <div className={FieldsStyles.boards_check}>{checkDueDate && <span className={FieldsStyles.check_icon}> <Check size={18} color="white"  /></span>}</div>
-            </div>     
+              <div className={FieldsStyles.boards_check}>
+                {checkDueDate && (
+                  <span className={FieldsStyles.check_icon}>
+                    {" "}
+                    <Check size={18} color="white" />
+                  </span>
+                )}
+              </div>
+            </div>
           </div>
-             {/* Labels */}
-          <div onClick={()=>setCheckLabels(!checkLabels)} className={FieldsStyles.fields_modal_body_outer}>
+          {/* Labels */}
+          <div
+            onClick={() => setCheckLabels(!checkLabels)}
+            className={FieldsStyles.fields_modal_body_outer}
+          >
             <div className={FieldsStyles.fields_modal_body}>
               <div className={styles.subModal_text}>Labels</div>
-              <div className={FieldsStyles.boards_check}>{checkLabels && <span className={FieldsStyles.check_icon}> <Check size={18} color="white"  /></span>}</div>
-            </div>     
+              <div className={FieldsStyles.boards_check}>
+                {checkLabels && (
+                  <span className={FieldsStyles.check_icon}>
+                    {" "}
+                    <Check size={18} color="white" />
+                  </span>
+                )}
+              </div>
+            </div>
           </div>
-             {/* status */}
-          <div onClick={()=>setCheckStatus(!checkStatus)} className={FieldsStyles.fields_modal_body_outer}>
+          {/* status */}
+          <div
+            onClick={() => setCheckStatus(!checkStatus)}
+            className={FieldsStyles.fields_modal_body_outer}
+          >
             <div className={FieldsStyles.fields_modal_body}>
               <div className={styles.subModal_text}>Status</div>
-              <div className={FieldsStyles.boards_check}>{checkStatus && <span className={FieldsStyles.check_icon}> <Check size={18} color="white"  /></span>}</div>
-            </div>     
+              <div className={FieldsStyles.boards_check}>
+                {checkStatus && (
+                  <span className={FieldsStyles.check_icon}>
+                    {" "}
+                    <Check size={18} color="white" />
+                  </span>
+                )}
+              </div>
+            </div>
           </div>
-             {/* teams */}
-          <div onClick={()=>setCheckTeams(!checkTeams)} className={FieldsStyles.fields_modal_body_outer}>
+          {/* teams */}
+          <div
+            onClick={() => setCheckTeams(!checkTeams)}
+            className={FieldsStyles.fields_modal_body_outer}
+          >
             <div className={FieldsStyles.fields_modal_body}>
               <div className={styles.subModal_text}>Teams</div>
-              <div className={FieldsStyles.boards_check}>{checkTeams && <span className={FieldsStyles.check_icon}> <Check size={18} color="white"  /></span>}</div>
-            </div>     
+              <div className={FieldsStyles.boards_check}>
+                {checkTeams && (
+                  <span className={FieldsStyles.check_icon}>
+                    {" "}
+                    <Check size={18} color="white" />
+                  </span>
+                )}
+              </div>
+            </div>
           </div>
-              {/* Reporter */}
-          <div onClick={()=>setCheckReporter(!checkReporter)} className={FieldsStyles.fields_modal_body_outer}>
+          {/* Reporter */}
+          <div
+            onClick={() => setCheckReporter(!checkReporter)}
+            className={FieldsStyles.fields_modal_body_outer}
+          >
             <div className={FieldsStyles.fields_modal_body}>
               <div className={styles.subModal_text}>Reporter</div>
-              <div className={FieldsStyles.boards_check}>{checkReporter && <span className={FieldsStyles.check_icon}> <Check size={18} color="white"  /></span>}</div>
-            </div>     
+              <div className={FieldsStyles.boards_check}>
+                {checkReporter && (
+                  <span className={FieldsStyles.check_icon}>
+                    {" "}
+                    <Check size={18} color="white" />
+                  </span>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       )}
     </DashboardLayout>
   );
+
 }

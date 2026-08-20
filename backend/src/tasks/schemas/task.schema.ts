@@ -8,41 +8,51 @@ export type TaskDocument = HydratedDocument<Task>;
   timestamps: true,
 })
 export class Task {
-  @Prop({ required: true, trim: true })
+  @Prop({
+    required: true,
+    trim: true,
+  })
   title: string;
 
-  @Prop({ required: true, trim: true })
-  description: string;
-
   @Prop({
-    required: true,
-    enum: ['Development', 'Design', 'Marketing', 'Testing', 'Documentation'],
-  })
-  category: string;
-
-  @Prop({
-    required: true,
     enum: ['Low', 'Medium', 'High'],
     default: 'Medium',
   })
   priority: string;
 
   @Prop({
-    required: true,
     enum: ['todo', 'doing', 'completed', 'onhold'],
     default: 'todo',
   })
   status: string;
 
   @Prop()
-  dueDate: Date;
+  dueDate?: Date;
+
+  @Prop({
+    type: [{ type: Types.ObjectId, ref: 'User' }],
+    required: false,
+  })
+  members?: Types.ObjectId[];
+
+  @Prop({
+    type: [String],
+    required: false,
+  })
+  labels?: string[];
+
+  @Prop({
+    type: [{ type: Types.ObjectId, ref: 'Team' }],
+    required: false,
+  })
+  teams?: Types.ObjectId[];
 
   @Prop({
     type: Types.ObjectId,
     ref: 'User',
     required: false,
   })
-  assignedTo?: Types.ObjectId;
+  reporter?: Types.ObjectId;
 }
 
 export const TaskSchema = SchemaFactory.createForClass(Task);
