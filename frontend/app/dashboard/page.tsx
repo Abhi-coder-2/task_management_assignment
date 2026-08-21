@@ -183,6 +183,7 @@ type DashboardLayoutProps = {
 
 type UserData = {
   name?: string;
+  email?: string;
 };
 
 export default function DashboardLayout({children}:DashboardLayoutProps) {
