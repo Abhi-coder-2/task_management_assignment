@@ -44,6 +44,7 @@ type Task = {
   priority: "High" | "Medium" | "Low";
   dueDate: string;
   status: "todo" | "doing" | "completed" | "onhold";
+  labels?: string;
 };
 
 type Column = {
@@ -70,7 +71,7 @@ const columns: Column[] = [
   },
 ];
 type Modal = {
-  icon: string;
+  icon: React.ReactNode;
   text: string;
 };
 const modal: Modal[] = [
@@ -105,7 +106,7 @@ const modal: Modal[] = [
 ];
 
 export default function TaskBoard() {
-  const [cardData, setCardData] = useState([]);
+  const [cardData, setCardData] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAddTask, setShowAddTask] = useState(false);
   const [workSpaceOpen, setWorkSpaceOpen] = useState(true);
@@ -117,8 +118,8 @@ export default function TaskBoard() {
   const [selectedDueDate, setSelectedDueDate] = useState<Date | undefined>(
     undefined,
   );
-  const [selectedLabel, setSelectedLabel] = useState();
-  const [selectedTeam, setSelectedTeam] = useState();
+  const [selectedLabel, setSelectedLabel] = useState<string | undefined>(undefined);
+  const [selectedTeam, setSelectedTeam] = useState<string | undefined>(undefined);
   const [selectedReporter, setSelectedReporter] = useState("");
   const [taskTitle, setTaskTitle] = useState("");
   // fields state

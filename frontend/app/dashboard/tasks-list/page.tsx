@@ -49,6 +49,15 @@ type Task = {
   status: "todo" | "doing" | "completed" | "onhold";
 };
 
+type CardTask = {
+  _id: string;
+  TaskTitle?: string;
+  priority?: string;
+  members?: string[];
+  dueDate?: string;
+  status: "todo" | "doing" | "completed" | "onhold";
+};
+
 type Column = {
   id: Task["status"];
   title: string;
@@ -85,7 +94,7 @@ const API_URL =
 // ---------------------------------------------------------------------------
 
 export default function TaskList() {
-  const [cardData, setCardData] = useState([]);
+  const [cardData, setCardData] = useState<CardTask[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAddTask, setShowAddTask] = useState(false);
   const [workSpaceOpen, setWorkSpaceOpen] = useState(true);
@@ -97,8 +106,8 @@ export default function TaskList() {
   const [selectedDueDate, setSelectedDueDate] = useState<Date | undefined>(
     undefined,
   );
-  const [selectedLabel, setSelectedLabel] = useState();
-  const [selectedTeam, setSelectedTeam] = useState();
+  const [selectedLabel, setSelectedLabel] = useState<string | undefined>(undefined);
+  const [selectedTeam, setSelectedTeam] = useState<string | undefined>(undefined);
   const [selectedReporter, setSelectedReporter] = useState("");
   const [taskTitle, setTaskTitle] = useState("");
   // fields state
