@@ -15,10 +15,10 @@ async function bootstrap() {
 
   // Allow requests from your Next.js frontend
   app.enableCors();
-
-  const port = process.env.PORT ?? 3001;
-await app.listen(port, () => {
-  console.log(`Application is running on: http://localhost:${port}`);
+const PORT = process.env.PORT || 3001;
+  
+await app.listen(PORT, () => {
+  console.log(`Application is running on: http://localhost:${PORT}`);
 });
 }
 
