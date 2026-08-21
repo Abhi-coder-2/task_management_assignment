@@ -28,7 +28,7 @@ export default function GuestLogin() {
   const handleClick = async () => {
     try {
       const res = await axios.post<GuestLoginResponse>(
-        "http://localhost:3001/users/guest-login"
+        `${process.env.NEXT_PUBLIC_API_URL}/users/guest-login`
       );
 
 

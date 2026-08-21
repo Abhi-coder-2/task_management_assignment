@@ -85,9 +85,6 @@ const modalItems: ModalItem[] = [
   { icon: <UserRound />, text: "Reporter" },
 ];
 
-const API_URL =
-  process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ||
-  "http://localhost:3001";
 
 // ---------------------------------------------------------------------------
 // Component
@@ -142,7 +139,7 @@ export default function TaskList() {
 
   const fetchData = async () => {
     try {
-      const res = await axios.get("http://localhost:3001/tasks");
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/tasks`);
       setCardData(res.data);
     } catch (err) {
       console.log("Error fetching tasks:", err);
@@ -154,11 +151,11 @@ export default function TaskList() {
   //POST CARD DATA FUNCTION
   //------------------------------------------------------------------
 
-  console.log(taskTitle, "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+
 
   const postData = async () => {
     try {
-      const response = await axios.post("http://localhost:3001/tasks", payload);
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/tasks`, payload);
     } catch (err) {
       console.log("Error fetching tasks:", err);
     } finally {
