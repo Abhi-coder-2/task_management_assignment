@@ -9,14 +9,15 @@ export type TaskDocument = HydratedDocument<Task>;
 })
 export class Task {
   @Prop({
-    required: true,
+    required: true ,
     trim: true,
   })
-  title: string;
+  TaskTitle: string;
 
+  // Matches the values actually sent by the frontend/DTO
   @Prop({
-    enum: ['Low', 'Medium', 'High'],
-    default: 'Medium',
+    enum: ['noPriority', 'urgent', 'high', 'medium', 'low'],
+    default: 'noPriority',
   })
   priority: string;
 
@@ -40,12 +41,11 @@ export class Task {
     required: false,
   })
   labels?: string[];
-
   @Prop({
-    type: [{ type: Types.ObjectId, ref: 'Team' }],
+    type: [String],
     required: false,
   })
-  teams?: Types.ObjectId[];
+  teams?: string[];
 
   @Prop({
     type: Types.ObjectId,

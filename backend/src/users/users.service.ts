@@ -17,7 +17,7 @@ export class UsersService {
   async guestLogin() {
     let user = await this.userModel
       .findOne({
-        username: 'guest',
+        username: 'guest@1234',
       })
       .exec();
 
@@ -25,8 +25,8 @@ export class UsersService {
     if (!user) {
       user = await this.userModel.create({
         name: 'Guest User',
-        username: 'guest',
-        email: 'guest@example.com',
+        username: 'guest@1234',
+        email: 'guestUser@gmail.com',
       });
     }
 

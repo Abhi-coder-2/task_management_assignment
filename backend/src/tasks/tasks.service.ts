@@ -1,6 +1,7 @@
 import {
   Injectable,
   NotFoundException,
+  BadRequestException,
 } from '@nestjs/common';
 
 import { InjectModel } from '@nestjs/mongoose';
@@ -17,12 +18,28 @@ export class TasksService {
     private readonly taskModel: Model<TaskDocument>,
   ) {}
 
+  // CREATE TASK
   async create(createTaskDto: CreateTaskDto) {
-    const task = new this.taskModel(createTaskDto);
+    // console.log('CREATE TASK DTO:', createTaskDto);
 
+    if (!createTaskDto.TaskTitle?.trim()) {
+      throw new BadRequestException('TaskTitle is required');
+    }
+
+    const task = new this.taskModel({
+      TaskTitle: createTaskDto.TaskTitle.trim(),
+      priority: createTaskDto.priority ?? 'noPriority',
+      status: createTaskDto.status ?? 'todo',
+      dueDate: createTaskDto.dueDate,
+      members: createTaskDto.members ?? [],
+      labels: createTaskDto.labels ?? [],
+      teams: createTaskDto.teams ?? [],
+      reporter: createTaskDto.reporter,
+    });
     return await task.save();
   }
 
+  // GET ALL TASKS
   async findAll() {
     return await this.taskModel
       .find()
@@ -30,6 +47,7 @@ export class TasksService {
       .exec();
   }
 
+  // GET ONE TASK
   async findOne(id: string) {
     const task = await this.taskModel
       .findById(id)
@@ -42,6 +60,7 @@ export class TasksService {
     return task;
   }
 
+  // UPDATE TASK
   async update(
     id: string,
     updateTaskDto: UpdateTaskDto,
@@ -64,6 +83,7 @@ export class TasksService {
     return task;
   }
 
+  // DELETE TASK
   async remove(id: string) {
     const task = await this.taskModel
       .findByIdAndDelete(id)

@@ -31,7 +31,6 @@ export default function GuestLogin() {
         "http://localhost:3001/users/guest-login"
       );
 
-      console.log(res.data, "GUEST LOGIN RESPONSE");
 
       // Store complete response
       setGuestData(res.data);

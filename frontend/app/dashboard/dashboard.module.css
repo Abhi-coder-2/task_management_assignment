@@ -25,7 +25,7 @@
 }
 .workspace_icon{
     display: inline-block;
-    margin-left: 60px;
+    margin-left: 50px;
     transition: transform 0.3s ease-in-out;
     transform: rotate(90deg);
 }
@@ -79,4 +79,25 @@
      flex-direction: column;
      gap:10px;
      justify-content: center;
+}
+.logOut-btn{
+    position: absolute;
+    bottom:50px;
+    width: 100px;
+    background-color:var(--card_bg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    color: black;
+    border: 1px solid var(--light_border);
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all .5s ease-in;
+    
+}
+.logOut-btn:hover{
+    background-color: #000000;
+    color: white;
 }

@@ -24,9 +24,13 @@ import {
   ChevronRight,
   Settings,
   Palette,
+  LogOut,
 } from "lucide-react";
 import Link from "next/link";
 import tasks from "./tasks/page";
+import { getLocalStorage } from "../lib/LocalStorage";
+import { useRouter } from "next/navigation";
+
 
 type Task = {
   id: number;
@@ -177,11 +181,29 @@ type DashboardLayoutProps = {
   children:ReactNode;
 }
 
+type UserData = {
+  name?: string;
+};
+
 export default function DashboardLayout({children}:DashboardLayoutProps) {
   const [darkMode, setDarkMode] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [workSpaceOpen, setWorkSpaceOpen] = useState(true);
   const [userOpen, setUserOpen] = useState(false);
+
+  //----------------------------------------------------------
+  //USERS DATA FROM LOCAL STORAGE
+  //----------------------------------------------------------
+  const userData = getLocalStorage("guestLogin") as UserData | null;
+  //-----------------------------------------------
+  //HANDLE LOGOUT
+  //-----------------------------------------------
+  const router = useRouter();
+  const handleLogout = ()=>{
+    router.push("/login")
+  }
+
+  
   return (
     <>
       <div 
@@ -203,15 +225,15 @@ export default function DashboardLayout({children}:DashboardLayoutProps) {
           {/* --logo--*/}
           <div className="flex h-[64px] items-center justify-between border-b border-white/10">
           {/* USER PROFILE AND MODE */}
-            <div onClick={() => setUserOpen(!userOpen)} className="flex items-center gap-2 px-5 cursor-pointer">
+            <div onClick={() => setUserOpen(!userOpen)} className="flex items-center cursor-pointer">
               <div className={`${styles.workspace_img} flex h-8 w-8 items-center justify-center`}>
                 <img src="/admin.jpg" alt="" />
               </div>
 
-              <span className="text-sm font-semibold">Dexter</span>
+              <span className="text-sm w-[100px] font-semibold">{userData?.name || "Guest User"}</span>
               <span className={styles.workspace_icon}><Code size={15}/></span>
             </div>
-            <button onClick={() => setSidebarOpen(false)} className={`${styles.pointer} lg:hidden`}>
+            <button onClick={() => setSidebarOpen(false)} className={`${styles.pointer} lg:hidden absolute top-1 right-1`}>
               <X size={19} />
             </button>
           </div>
@@ -229,6 +251,9 @@ export default function DashboardLayout({children}:DashboardLayoutProps) {
                 }`}
               />
             </button>
+          {/* LOGOUT BUTTON */}
+          <div onClick={()=>{handleLogout()}} className="w-[100%] flex justify-center"> <div className={styles["logOut-btn"]}><span>Logout</span><LogOut size={15} /></div></div>
+
             {/* --dropdown-- */}
             {workSpaceOpen && (
               <div className="mt-1 space-y-1">
@@ -289,15 +314,16 @@ export default function DashboardLayout({children}:DashboardLayoutProps) {
           </section>
         </main>
       </div>
-
-      USER PROFILE DROPDOWN
+    
+      {/* USER PROFILE DROPDOWN */}
+    
       {userOpen && (
         <div className={styles.user_dropdown}>
           <X  onClick={() => setUserOpen(!userOpen)} className="ml-auto mt-2 mr-2 cursor-pointer" size={13}/>
           <div className={`${styles.user_dropdown_header} ${styles.dropdown_header}`}>
             <div className={`${styles.workspace_img}`}><img src="/admin.jpg" alt="" /></div>
-            <div className="mt-1">Dexter</div>
-            <div>john.doe@example.com</div>
+            <div className="mt-1">{userData?.name || "Guest User"}</div>
+            <div>{userData?.email || "john.doe@example.com"}</div>
           </div>
           <div className={`${styles.dropdown_header} ${styles.user_dropdown_footer}`}>
            <div className="flex justify-between cursor-pointer"><div><span><Sun /> </span><span className="ml-2">Change Theme</span></div><div><ChevronRight /></div></div>

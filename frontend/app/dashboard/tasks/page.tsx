@@ -31,6 +31,7 @@ import axios from "axios";
 import { DayPicker } from "react-day-picker";
 import { format } from "date-fns";
 import Link from "next/link";
+import { getLocalStorage } from "@/app/lib/LocalStorage";
 
 type Task = {
   _id: string;
@@ -112,13 +113,13 @@ export default function TaskBoard() {
   const [openModal, setOpenModal] = useState<number | null>(null);
   const [selectedStatus, setSelectedStatus] = useState("todo");
   const [selectedPriority, setSelectedPriority] = useState("noPriority");
-  const [selectedMember, setSelectedMember] = useState("admin");
+  const [selectedMember, setSelectedMember] = useState<string | null>(null);
   const [selectedDueDate, setSelectedDueDate] = useState<Date | undefined>(
     undefined,
   );
-  const [selectedLabel, setSelectedLabel] = useState("");
-  const [selectedTeam, setSelectedTeam] = useState("");
-  const [selectedReporter, setSelectedReporter] = useState("xyz");
+  const [selectedLabel, setSelectedLabel] = useState();
+  const [selectedTeam, setSelectedTeam] = useState();
+  const [selectedReporter, setSelectedReporter] = useState("");
   const [taskTitle, setTaskTitle] = useState("");
   // fields state
   const [openFields, setOpenFields] = useState(false);
@@ -129,6 +130,19 @@ export default function TaskBoard() {
   const [checkStatus, setCheckStatus] = useState(false);
   const [checkReporter, setCheckReporter] = useState(false);
   const [checkTeams, setCheckTeams] = useState(false);
+
+  // USER DATA
+  const userData = getLocalStorage("guestLogin") as { _id?: string };
+  const payload = {
+  TaskTitle: taskTitle.trim(),
+  priority: selectedPriority,
+  status: selectedStatus,
+  dueDate: selectedDueDate,
+  members: selectedMember ? [selectedMember] : [],
+  labels: selectedLabel ? [selectedLabel] : [],
+  reporter: userData?._id,
+  teams: selectedTeam ? [selectedTeam] : [],
+};
 
   useEffect(() => {
     fetchData();
@@ -147,24 +161,25 @@ export default function TaskBoard() {
       setLoading(false);
     }
   };
-  console.log(cardData, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
   //------------------------------------------------------------------
   //POST CARD DATA FUNCTION
   //------------------------------------------------------------------
-  const postData = () => {
-    console.log(
-      {
-        taskTitle,
-        selectedStatus,
-        selectedPriority,
-        selectedMember,
-        selectedDueDate,
-        selectedLabel,
-        selectedTeam,
-        selectedReporter,
-      },
-      "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS",
-    );
+
+ 
+
+  console.log(taskTitle,"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+  
+
+  const postData = async () => {
+    try {
+      const response = await axios.post("http://localhost:3001/tasks",payload);
+
+      
+    } catch (err) {
+      console.log("Error fetching tasks:", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -184,7 +199,7 @@ export default function TaskBoard() {
             </div>
 
             <div
-              onClick={() => setOpenFields(!openFields)}
+              onClick={() => {setOpenFields(!openFields);setShowAddTask(false)}}
               className={`flex items-center justify-center gap-2 ${styles.task_icon_border}`}
             >
               <Columns3 className={styles.task_head_icon} />
@@ -198,7 +213,7 @@ export default function TaskBoard() {
 
             <div>
               <button
-                onClick={() => setShowAddTask(!showAddTask)}
+               onClick={() => {setShowAddTask(!showAddTask);setOpenFields(false)}}
                 className={`${styles.task_head_btn} bg-black text-white`}
               >
                 <span>+</span> Add Task
@@ -290,7 +305,7 @@ export default function TaskBoard() {
                           <span>
                             <Tag size={14} />
                           </span>
-                          <span>{task.category}</span>
+                          <span>{task?.labels}</span>
                         </div>
                         <div className=" rounded-full bg-gray-100 px-2 py-1 text-xs text-gray-600 flex align-center gap-1">
                           <span>
@@ -326,7 +341,6 @@ export default function TaskBoard() {
           </div>
           <div className={styles.modal_box}>
             <input
-              value={taskTitle}
               onChange={(e) => setTaskTitle(e.target.value)}
               type="text"
               placeholder="Task Title"
@@ -502,30 +516,12 @@ export default function TaskBoard() {
           <p className="text-xs text-gray-500">Members</p>
 
           <div
-            onClick={() => setSelectedMember("admin")}
+            onClick={() => setSelectedMember("")}
             className="mt-2 flex justify-between"
           >
-            <p className={styles.subModal_text}>Admin</p>
+            <p className={styles.subModal_text}>Guest User</p>
 
-            <p>{selectedMember === "admin" && <Check size={22} />}</p>
-          </div>
-
-          <div
-            onClick={() => setSelectedMember("cn")}
-            className="flex justify-between"
-          >
-            <p className={styles.subModal_text}>CN</p>
-
-            <p>{selectedMember === "cn" && <Check size={22} />}</p>
-          </div>
-
-          <div
-            onClick={() => setSelectedMember("ab")}
-            className="flex justify-between"
-          >
-            <p className={styles.subModal_text}>AB</p>
-
-            <p>{selectedMember === "ab" && <Check size={22} />}</p>
+            <p>{selectedMember === userData?._id && <Check size={22} />}</p>
           </div>
         </div>
       )}
@@ -572,37 +568,11 @@ export default function TaskBoard() {
         <div className={`${styles.status_modal} mt-40`}>
           <p className="text-xs text-gray-500">Team</p>
           <div
-            onClick={() => setSelectedTeam("deployment")}
+            onClick={() => setSelectedTeam("abc")}
             className="mt-2 flex justify-between"
           >
-            <p className={styles.subModal_text}>deployment</p>
-            <p>{selectedTeam === "deployment" && <Check size={22} />}</p>
-          </div>
-          <div
-            onClick={() => setSelectedTeam("design")}
-            className="flex justify-between"
-          >
-            <p className={styles.subModal_text}>Design</p>
-
-            <p>{selectedTeam === "design" && <Check size={22} />}</p>
-          </div>
-
-          <div
-            onClick={() => setSelectedTeam("audit")}
-            className="flex justify-between"
-          >
-            <p className={styles.subModal_text}>Audit</p>
-
-            <p>{selectedTeam === "audit" && <Check size={22} />}</p>
-          </div>
-
-          <div
-            onClick={() => setSelectedTeam("scheduled")}
-            className="flex justify-between"
-          >
-            <p className={styles.subModal_text}>Scheduled</p>
-
-            <p>{selectedTeam === "scheduled" && <Check size={22} />}</p>
+            <p className={styles.subModal_text}>Guest Team</p>
+            <p>{selectedTeam === "abc" && <Check size={22} />}</p>
           </div>
         </div>
       )}
@@ -826,5 +796,4 @@ export default function TaskBoard() {
       )}
     </DashboardLayout>
   );
-
 }
