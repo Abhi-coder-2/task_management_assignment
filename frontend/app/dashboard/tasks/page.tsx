@@ -35,16 +35,16 @@ import { getLocalStorage } from "@/app/lib/LocalStorage";
 
 type Task = {
   _id: string;
-  title: string;
-  assignedTo?: {
-    name?: string;
-    username?: string;
-  } | null;
-  category: string;
-  priority: "High" | "Medium" | "Low";
-  dueDate: string;
+  TaskTitle: string;
+  priority: "noPriority" | "urgent" | "high" | "medium" | "low";
   status: "todo" | "doing" | "completed" | "onhold";
-  labels?: string;
+  dueDate?: string;
+  members: string[];
+  labels: string[];
+  teams: string[];
+  reporter: string;
+  createdAt: string;
+  updatedAt: string;
 };
 
 type Column = {
@@ -166,11 +166,6 @@ export default function TaskBoard() {
   //POST CARD DATA FUNCTION
   //------------------------------------------------------------------
 
- 
-
-  console.log(taskTitle,"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-  
-
   const postData = async () => {
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/tasks`, payload);
@@ -253,17 +248,17 @@ export default function TaskBoard() {
                   </div>
                 </div>
 
-                {/* CARDS */}
+                {/*-------------------------------SHOW CARDS---------------------------------- */}
                 <div className="flex flex-col gap-3">
-                  {columnTasks.map((task) => (
+                  {columnTasks.map((card_data) => (
                     <div
-                      key={task._id}
+                      key={card_data?._id}
                       className={`${styles.task_card_outer} rounded-lg border border-gray-200 bg-white p-3 shadow-sm`}
                     >
                       {/* TITLE */}
                       <div className="flex items-start justify-between gap-2">
                         <h3 className="text-sm font-medium text-gray-800">
-                          {task.title}
+                          {card_data?.TaskTitle}
                         </h3>
 
                         <MoreHorizontal
@@ -288,8 +283,8 @@ export default function TaskBoard() {
                             className={`${styles.card_dueDate} inline-flex items-center gap-1 rounded-full bg-red-50 px-2 py-1 text-xs text-red-500`}
                           >
                             <CalendarDays size={13} />
-                            {task.dueDate
-                              ? new Date(task.dueDate).toLocaleDateString(
+                            {card_data?.dueDate
+                              ? new Date(card_data.dueDate).toLocaleDateString(
                                   "en-GB",
                                   {
                                     day: "2-digit",
@@ -306,13 +301,13 @@ export default function TaskBoard() {
                           <span>
                             <Tag size={14} />
                           </span>
-                          <span>{task?.labels}</span>
+                          <span>{card_data?.labels?.join(", ")}</span>
                         </div>
                         <div className=" rounded-full bg-gray-100 px-2 py-1 text-xs text-gray-600 flex align-center gap-1">
                           <span>
                             <Tag size={14} />
                           </span>
-                          <span>{task.category}</span>
+                          <span>{card_data?.teams?.join(", ")}</span>
                         </div>
                       </div>
                     </div>
@@ -517,7 +512,7 @@ export default function TaskBoard() {
           <p className="text-xs text-gray-500">Members</p>
 
           <div
-            onClick={() => setSelectedMember("")}
+           onClick={() => setSelectedMember(userData?._id || null)}
             className="mt-2 flex justify-between"
           >
             <p className={styles.subModal_text}>Guest User</p>

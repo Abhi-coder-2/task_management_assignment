@@ -18,7 +18,7 @@ async function bootstrap() {
 const PORT = process.env.PORT || 3001;
   
 await app.listen(PORT, () => {
-  console.log(`Application is running on: http://localhost:${PORT}`);
+  console.log(`Application is running on:${PORT}`);
 });
 }
 
