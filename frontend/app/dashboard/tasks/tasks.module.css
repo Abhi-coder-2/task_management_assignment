@@ -44,33 +44,39 @@
     border-radius: 5px;
     cursor: pointer;
 }
-.task_head_input{
+
+.task_head_input {
     outline: none;
-    border: 1px solid  rgb(141, 138, 138);
+    border: 1px solid rgb(141, 138, 138);
     border-radius: 5px;
     padding: 1px;
 }
-.task_head_btn{
+
+.task_head_btn {
     padding: 5px 8px;
     border-radius: 5px;
     font-size: 14px;
-   cursor: pointer;
-   width: 90px;
+    cursor: pointer;
+    width: 90px;
 }
-.task_card_outer{
-    width:250px;
+
+.task_card_outer {
+    width: 250px;
     height: 120px;
 }
-.user_calendar{
+
+.user_calendar {
     width: 100%;
     display: flex;
     justify-content: space-between;
-    
+
 }
-.card_dueDate{
+
+.card_dueDate {
     width: 75px;
 }
-.user_card_img{
+
+.user_card_img {
     display: inline-block;
     height: 25px;
     width: 25px;
@@ -81,10 +87,10 @@
 
 /* add task modal */
 
-.modal_outer{
-   min-height:300px;
+.modal_outer {
+    min-height: 300px;
     width: 175px;
-    background-color:white;
+    background-color: white;
     border-radius: 5px;
     box-shadow: 0px 0px 10px rgb(165, 164, 164);
     position: fixed;
@@ -93,41 +99,48 @@
     right: 60px;
     padding: 10px;
 }
-.modal_box{
+
+.modal_box {
     display: flex;
     flex-direction: column;
 }
-.modal_outer input{
+
+.modal_outer input {
     outline: none;
     border: none;
     border-bottom: 1px solid rgb(161, 158, 158);
     width: 100%;
 }
-.status{
+
+.status {
     width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding:5px 5px;
+    padding: 5px 5px;
     border-radius: 5px;
     cursor: pointer;
 
 }
-.status:hover{
+
+.status:hover {
     background-color: rgba(243, 242, 241, 0.87);
 }
-.add_task_text{
+
+.add_task_text {
     font-size: 14px;
 
 }
-.icon_align{
+
+.icon_align {
     margin-top: 2.5px;
 
 }
-.status_modal{
-    min-height:100px;
+
+.status_modal {
+    min-height: 100px;
     width: 160px;
-    background-color:white;
+    background-color: white;
     border-radius: 5px;
     box-shadow: 0px 0px 10px rgb(165, 164, 164);
     position: fixed;
@@ -139,32 +152,102 @@
     display: flex;
     justify-content: center;
     flex-direction: column;
-    
-    
+
+
 }
-.status_modal div{
+
+.status_modal div {
     cursor: pointer;
     display: flex;
     width: 100%;
     justify-content: space-between;
     padding: 5px;
-    border-radius:5px;
-}
-.status_modal div:hover{
-    background-color: rgba(243, 242, 241, 0.87); 
+    border-radius: 5px;
 }
 
-   .modal_icon {
-  width: 16px;
-  height: 16px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+.status_modal div:hover {
+    background-color: rgba(243, 242, 241, 0.87);
 }
-.subModal_text{
+
+.modal_icon {
+    width: 16px;
+    height: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.subModal_text {
     font-size: 14px;
     display: flex;
     align-items: center;
-    
-}
 
+}
+.status_modal4{
+    position: fixed;
+    top: 320px;
+    right: 240px;
+
+ }
+ .status_modal1{
+        top: 195px;
+    }
+   .status_modal2{
+        top: 240px;
+    }
+     .status_modal3{
+        margin-top: 110px;
+    }
+    
+     .status_modal5{
+        margin-top: 190px;
+    }
+      .status_modal6{
+        margin-top: 220px;
+    }
+       .status_modal7{
+        margin-top: 260px;
+    }
+@media (max-width:768px) {
+    .task_header {
+        margin: auto;
+        padding-top: 10px;
+    }
+    .modal_outer{
+        top: 160px;
+        right: 10px;
+    }
+    .status_modal{
+        right: 195px;
+        
+    }
+    .status_modal1{
+        margin-top: 70px;
+    }
+     .status_modal2{
+        margin-top: 110px;
+    }
+     .status_modal3{
+        margin-top: 150px;
+    }
+     .status_modal4{
+        margin-top: -240px;
+        right: 80px;
+        z-index: 150;
+        
+    }
+     .status_modal5{
+        margin-top: 230px;
+    }
+      .status_modal6{
+        margin-top: 270px;
+    }
+       .status_modal7{
+        margin-top: 300px;
+    }
+        .status_modal8{
+        margin-top: 40px;
+        left: 50px;
+    }
+}
+ 

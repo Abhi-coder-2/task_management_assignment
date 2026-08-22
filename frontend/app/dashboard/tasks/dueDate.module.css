@@ -1,7 +1,5 @@
 .date_modal {
-    position: absolute;
-    right:250px;
-    z-index: 50;
+ 
     width: 230px;
     padding: 10px;
     background: white;

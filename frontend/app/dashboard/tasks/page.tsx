@@ -307,7 +307,7 @@ export default function TaskBoard() {
                           <span>
                             <Tag size={14} />
                           </span>
-                          <span>{card_data?.teams?.join(", ")}</span>
+                          <span>{card_data?.labels?.join(", ")}</span>
                         </div>
                       </div>
                     </div>
@@ -389,7 +389,7 @@ export default function TaskBoard() {
 
       {/* STATUS MODAL */}
       {openModal === 0 && (
-        <div className={styles.status_modal}>
+        <div className={`${styles.status_modal} ${styles.status_modal1}`}>
           <p className="text-xs text-gray-500">Status</p>
 
           <div
@@ -432,7 +432,7 @@ export default function TaskBoard() {
 
       {/* PRIORITY MODAL */}
       {openModal === 1 && (
-        <div className={`${styles.status_modal} mt-9`}>
+        <div className={`${styles.status_modal} ${styles.status_modal2}`}>
           <p className="text-xs text-gray-500">Priority</p>
           <div
             onClick={() => setSelectedPriority("noPriority")}
@@ -508,7 +508,7 @@ export default function TaskBoard() {
 
       {/* MEMBERS MODAL */}
       {openModal === 2 && (
-        <div className={`${styles.status_modal} mt-20`}>
+        <div className={`${styles.status_modal} ${styles.status_modal3}`}>
           <p className="text-xs text-gray-500">Members</p>
 
           <div
@@ -523,7 +523,7 @@ export default function TaskBoard() {
       )}
       {/* DUE DATE MODAL */}
       {openModal === 3 && (
-        <div className={`${CalendarStyles.date_modal} mt-30`}>
+        <div className={`${CalendarStyles.date_modal} ${styles.status_modal4}`}>
           <DayPicker
             mode="single"
             selected={selectedDueDate}
@@ -561,7 +561,7 @@ export default function TaskBoard() {
       )}
       {/* TEAMS MODAL */}
       {openModal === 4 && (
-        <div className={`${styles.status_modal} mt-40`}>
+        <div className={`${styles.status_modal} ${styles.status_modal5}`}>
           <p className="text-xs text-gray-500">Team</p>
           <div
             onClick={() => setSelectedTeam("abc")}
@@ -574,7 +574,7 @@ export default function TaskBoard() {
       )}
       {/* LABEL MODAL */}
       {openModal === 5 && (
-        <div className={`${styles.status_modal} mt-50`}>
+        <div className={`${styles.status_modal} ${styles.status_modal6}`}>
           <p className="text-xs text-gray-500">Label</p>
           <div
             onClick={() => setSelectedLabel("deployment")}
@@ -613,7 +613,7 @@ export default function TaskBoard() {
       )}
       {/* REPORTER MODAL */}
       {openModal === 6 && (
-        <div className={`${styles.status_modal} mt-60`}>
+        <div className={`${styles.status_modal} ${styles.status_modal7}`}>
           <p className="text-xs text-gray-500">Reporter</p>
 
           <div
@@ -656,7 +656,7 @@ export default function TaskBoard() {
 
       {/* fields Modal */}
       {openFields && (
-        <div className={`${FieldsStyles.fields_modal}  bg-white`}>
+        <div className={`${FieldsStyles.fields_modal} ${styles.status_modal8} bg-white`}>
           <div className={FieldsStyles.fields_modal_header}>
             <div className={FieldsStyles.fields_modal_header_div1}>
               {" "}
